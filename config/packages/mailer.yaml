@@ -1,0 +1,7 @@
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: 'tech@avido.com'
+        headers:
+            from: 'Dmitriy <tech@avido.com>'
