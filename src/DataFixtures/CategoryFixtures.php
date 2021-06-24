@@ -3,21 +3,11 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Factory;
-use Faker\Generator;
 
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends BaseFixtures
 {
     private const COUNT_FIXTURES = 5;
-
-    private Generator $faker;
-
-    public function __construct()
-    {
-        $this->faker = Factory::create();
-    }
 
     public function load(ObjectManager $manager)
     {
