@@ -110,12 +110,14 @@ services:
   message-broker:
     container_name: app.rabbitmq
     image: rabbitmq:3-management-alpine
-    environment:
-      RABBITMQ_DEFAULT_USER:
-      RABBITMQ_DEFAULT_PASS:
+#    environment:
+#      RABBITMQ_DEFAULT_USER: 'guest'
+#      RABBITMQ_DEFAULT_PASS: 'guest'
     ports:
       - 5672:5672
       - 15672:15672
+    networks:
+      - app
 
 #  elastic-search:
 #    container_name: app.elastic
@@ -138,4 +140,6 @@ volumes:
   mongodb_volume:
     driver: local
   redis_volume:
+    driver: local
+  rabbitmq_volume:
     driver: local

@@ -17,6 +17,6 @@ class RegistrationListener
     public function onUserRegistered(UserRegisteredEvent $event)
     {
         $verification = $event->getVerification();
-        $this->logger->info(sprintf('Verification code from Listener - %s', $verification->getCode()));
+//        $this->logger->info(sprintf('Verification code from Listener - %s', $verification->getCode()));
     }
 }

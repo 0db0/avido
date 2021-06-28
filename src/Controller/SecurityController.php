@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Service\RegistrationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,8 +29,16 @@ class SecurityController extends AbstractController
     #[Route("/verify", name: "verify_email", methods: ["GET"])]
     public function verifyEmail(Request $request): Response
     {
+        $code = $request->get('code');
+        $result = $this->registrationService->activateUserByVerificationCode($code);
 
-        return new Response($request->get('code'));
+        return new JsonResponse(['code' => $request->get('code'), 'status' => $result]);
+    }
+
+    #[Route("/user/{id}/reset-password")]
+    public function resetPassword(): Response
+    {
+        return new JsonResponse(['action' => 'reset password']);
     }
 
     #[Route("/login", name: "login", methods: ["GET"])]

@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Event\UserRegisteredEvent;
+use App\Repository\EmailVerificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -15,15 +17,18 @@ class RegistrationService
     private UserPasswordHasherInterface $passwordHasher;
     private EntityManagerInterface $manager;
     private EventDispatcherInterface $eventDispatcher;
+    private EmailVerificationRepository $verificationRepository;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $manager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        EmailVerificationRepository $verificationRepository
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->manager = $manager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->verificationRepository = $verificationRepository;
     }
 
     public function registerNewUser(): User
@@ -56,6 +61,31 @@ class RegistrationService
         return $verification;
     }
 
+    public function activateUserByVerificationCode(string $code): bool
+    {
+        /** @var EmailVerification $verification */
+        $verification = $this->verificationRepository->findOneBy([
+            'code' => $code,
+            'verified_at' => null
+        ], [
+            'createdAt' => 'DESC'
+        ]);
+
+        if (! $verification) {
+            throw new EntityNotFoundException(sprintf('Unknown verification code: %s', $code));
+        }
+
+        if (! $this->isCodeExpired($verification)) {
+            $verification->setVerifiedAt(new \DateTime());
+            $verification->getUser()->setStatus(User::STATUS_ACTIVE);
+            $this->manager->flush();
+
+            return true;
+        }
+
+        return false;
+    }
+
     private function prepareCode(): string
     {
         try {
@@ -63,5 +93,13 @@ class RegistrationService
         } catch (\Exception $e) {
             return Uuid::uuid4();
         }
+    }
+
+    private function isCodeExpired(EmailVerification $verification): bool
+    {
+        $now = (new \DateTime())->getTimestamp();
+        $createdAt = $verification->getCreatedAt()->getTimestamp();
+
+        return $now - $createdAt > 3600;
     }
 }
