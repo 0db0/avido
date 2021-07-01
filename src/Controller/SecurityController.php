@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Dto\CreateUserDto;
+use App\Dto\FooBar;
 use App\Service\RegistrationService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +21,11 @@ class SecurityController extends AbstractController
         $this->registrationService = $registrationService;
     }
 
-    #[Route("/register", name: "register_action", methods: ["POST", "GET"])]
-    public function registration(): Response
+    #[Route("/register", name: "register_action", methods: ["POST"])]
+    #[ParamConverter("userDto", CreateUserDto::class)]
+    public function registration(CreateUserDto $userDto): Response
     {
-        $user = $this->registrationService->registerNewUser();
+        $user = $this->registrationService->registerNewUser($userDto);
 
         return new Response('done', 201);
     }
@@ -41,11 +45,11 @@ class SecurityController extends AbstractController
         return new JsonResponse(['action' => 'reset password']);
     }
 
-    #[Route("/login", name: "login", methods: ["GET"])]
-    public function login()
-    {
-
-    }
+//    #[Route("/login", name: "login", methods: ["GET"])]
+//    public function login()
+//    {
+//
+//    }
 
     public function logout()
     {

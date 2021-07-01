@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Dto\CreateUserDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Event\UserRegisteredEvent;
@@ -31,15 +32,15 @@ class RegistrationService
         $this->verificationRepository = $verificationRepository;
     }
 
-    public function registerNewUser(): User
+    public function registerNewUser(CreateUserDto $dto): User
     {
         $user = new User();
-        $user->setEmail('asdas@masd.ru');
-        $user->setFirstname('Foo');
-        $user->setLastname('Bar');
-        $user->setPhoneNumber('111111111');
-        $user->setWhenConvenientReceiveCalls('Only message');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'password'));
+        $user->setFirstname($dto->getFirstName());
+        $user->setLastname($dto->getLastName());
+        $user->setEmail($dto->getEmail());
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
+        $user->setPhoneNumber($dto->getPhoneNumber());
+        $user->setWhenConvenientReceiveCalls($dto->getWhenConvenientReceiveCalls());
         $user->setStatus(User::STATUS_AWAITING_EMAIL_ACTIVATION);
         $verification = $this->generateVerificationCode($user);
 
