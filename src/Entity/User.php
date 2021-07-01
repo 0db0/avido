@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -12,12 +13,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public const STATUS_AWAITING_EMAIL_ACTIVATION = 0;
-    public const STATUS_ACTIVE                    = 1;
-    public const STATUS_BLOCKED                   = 2;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_BLOCKED = 2;
 
     /**
      * @ORM\Id()
@@ -102,7 +104,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $verification->setUser($this);
 
-        if (! $this->verifications->contains($verification)) {
+        if (!$this->verifications->contains($verification)) {
             $this->verifications->add($verification);
         }
     }
@@ -249,7 +251,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function eraseCredentials(): void
-    {}
+    {
+    }
 
     public function getUsername(): string
     {
