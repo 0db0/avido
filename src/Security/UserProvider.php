@@ -4,17 +4,12 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use JetBrains\PhpStorm\Pure;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * @method void upgradePassword(PasswordAuthenticatedUserInterface|UserInterface $user, string $newHashedPassword)
- */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     private UserRepository $userRepository;
@@ -49,5 +44,10 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
+    }
+
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
+    {
+        $this->userRepository->upgradePassword($user, $newHashedPassword);
     }
 }

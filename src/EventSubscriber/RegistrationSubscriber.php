@@ -4,6 +4,7 @@ namespace App\EventSubscriber;
 
 use App\Event\UserRegisteredEvent;
 use App\Message\EmailVerification;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,7 +34,7 @@ class RegistrationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function handleRegistration(UserRegisteredEvent $event)
+    public function handleRegistration(UserRegisteredEvent $event): void
     {
         $verification = $event->getVerification();
         $user = $event->getUser();

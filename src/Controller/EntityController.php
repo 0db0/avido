@@ -73,6 +73,6 @@ class EntityController extends AbstractController
         $user = $this->userRepository->find($id);
 //        date_default_timezone_set('Europe/Moscow');
 //        return new JsonResponse(['date' => date('d-m-Y H:i:s', $user->getUpdatedAt()->getTimestamp())], 200);
-        return new JsonResponse(['user' => ''], 200);
+        return new JsonResponse(['user' => $user->getId()], 200);
     }
 }

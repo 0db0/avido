@@ -19,14 +19,6 @@ class CreateUserDto
     private string $email;
 
     #[Assert\NotBlank]
-    #[Assert\Length(max: 13)]
-    private string $phoneNumber;
-
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 255)]
-    private string $whenConvenientReceiveCalls;
-
-    #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     private string $password;
 
@@ -34,17 +26,12 @@ class CreateUserDto
         string $firstName,
         string $lastName,
         string $email,
-        string $phoneNumber,
-        string $whenConvenientReceiveCalls,
         string $password
     ) {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->email = $email;
-        $this->phoneNumber = $phoneNumber;
-        $this->whenConvenientReceiveCalls = $whenConvenientReceiveCalls;
-        $this->password = $password;
-
+        $this->firstName                  = $firstName;
+        $this->lastName                   = $lastName;
+        $this->email                      = $email;
+        $this->password                   = $password;
     }
 
     public function getFirstName(): string
@@ -60,16 +47,6 @@ class CreateUserDto
     public function getEmail(): string
     {
         return $this->email;
-    }
-
-    public function getPhoneNumber(): string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function getWhenConvenientReceiveCalls(): string
-    {
-        return $this->whenConvenientReceiveCalls;
     }
 
     public function getPassword(): string

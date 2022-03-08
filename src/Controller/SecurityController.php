@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Dto\CreateUserDto;
-use App\Dto\FooBar;
 use App\Service\RegistrationService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,15 +20,6 @@ class SecurityController extends AbstractController
         $this->registrationService = $registrationService;
     }
 
-    #[Route("/register", name: "register_action", methods: ["POST"])]
-    #[ParamConverter("userDto", CreateUserDto::class)]
-    public function registration(CreateUserDto $userDto): Response
-    {
-        $user = $this->registrationService->registerNewUser($userDto);
-
-        return new Response('done', 201);
-    }
-
     #[Route("/verify", name: "verify_email", methods: ["GET"])]
     public function verifyEmail(Request $request): Response
     {
@@ -39,11 +29,11 @@ class SecurityController extends AbstractController
         return new JsonResponse(['code' => $request->get('code'), 'status' => $result]);
     }
 
-    #[Route("/user/{id}/reset-password")]
-    public function resetPassword(): Response
-    {
-        return new JsonResponse(['action' => 'reset password']);
-    }
+//    #[Route("/user/{id}/reset-password", name: "reset_password", methods: ['POST'])]
+//    public function resetPassword(): Response
+//    {
+//        return new JsonResponse(['action' => 'reset password']);
+//    }
 
 //    #[Route("/login", name: "login", methods: ["GET"])]
 //    public function login()
@@ -53,6 +43,5 @@ class SecurityController extends AbstractController
 
     public function logout()
     {
-
     }
 }

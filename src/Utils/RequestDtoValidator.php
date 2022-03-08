@@ -9,7 +9,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RequestDtoValidator
 {
     public function __construct(private ValidatorInterface $validator)
-    {}
+    {
+    }
 
     public function validate(mixed $value): ConstraintViolationListInterface
     {

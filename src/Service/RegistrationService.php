@@ -39,8 +39,6 @@ class RegistrationService
         $user->setLastname($dto->getLastName());
         $user->setEmail($dto->getEmail());
         $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
-        $user->setPhoneNumber($dto->getPhoneNumber());
-        $user->setWhenConvenientReceiveCalls($dto->getWhenConvenientReceiveCalls());
         $user->setStatus(User::STATUS_AWAITING_EMAIL_ACTIVATION);
         $verification = $this->generateVerificationCode($user);
 

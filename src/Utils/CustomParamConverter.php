@@ -3,19 +3,21 @@
 namespace App\Utils;
 
 use App\Exception\ConstraintViolationException;
+use ReflectionProperty;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class CustomParamConverter implements ParamConverterInterface
 {
-    public function __construct(private RequestDtoValidator $validator) {}
+    public function __construct(private RequestDtoValidator $validator)
+    {
+    }
 
     public function apply(Request $request, ParamConverter $configuration): bool
     {
         $reflectionAction = new \ReflectionMethod($request->attributes->get('_controller'));
         $parameters = $reflectionAction->getParameters();
-
 
         foreach ($parameters as $parameter) {
             if ($configuration->getClass() === $parameter->getType()->getName()) {
@@ -42,20 +44,21 @@ class CustomParamConverter implements ParamConverterInterface
                 return true;
             }
         }
+
+        return false;
     }
 
     public function supports(ParamConverter $configuration): bool
     {
-        return strpos($configuration->getClass(), 'App\Dto\\') === 0;
+        return str_starts_with($configuration->getClass(), 'App\Dto\\');
     }
 
     /**
-     * @param \ReflectionProperty[] $properties
-     * @param Request $request
-     * @return array
+     * @param ReflectionProperty[] $properties
      */
     private function getArguments(array $properties, Request $request): array
     {
+//        dd($request->request->get($this->transformToSnakeCase($properties[0]->getName())));
         foreach ($properties as $property) {
             if ($argument = $request->request->get($property->getName())) {
                 $arguments[] = $argument;
@@ -63,7 +66,8 @@ class CustomParamConverter implements ParamConverterInterface
                 $arguments[] = $argument;
             } else {
                 throw new \InvalidArgumentException(
-                    sprintf('Field %s cannot be null.', $property->getName()));
+                    sprintf('Field %s cannot be null.', $property->getName())
+                );
             }
         }
 
