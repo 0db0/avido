@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use App\Exception\ConstraintViolationException;
+use ReflectionException;
 use ReflectionProperty;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -14,20 +15,24 @@ class CustomParamConverter implements ParamConverterInterface
     {
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws ConstraintViolationException
+     */
     public function apply(Request $request, ParamConverter $configuration): bool
     {
         $reflectionAction = new \ReflectionMethod($request->attributes->get('_controller'));
         $parameters = $reflectionAction->getParameters();
 
         foreach ($parameters as $parameter) {
-            if ($configuration->getClass() === $parameter->getType()->getName()) {
+            if ($configuration->getClass() === $parameter->getType()?->getName()) {
                 $reflectionClass = new \ReflectionClass($configuration->getClass());
                 $properties = $reflectionClass->getProperties();
                 $arguments = $this->getArguments($properties, $request);
 
                 try {
                     $objectDto = $reflectionClass->newInstance(...$arguments);
-                } catch (\ReflectionException $e) {
+                } catch (ReflectionException $e) {
 //                    todo: loggin exception
                     return false;
                 }
@@ -58,11 +63,10 @@ class CustomParamConverter implements ParamConverterInterface
      */
     private function getArguments(array $properties, Request $request): array
     {
-//        dd($request->request->get($this->transformToSnakeCase($properties[0]->getName())));
         foreach ($properties as $property) {
-            if ($argument = $request->request->get($property->getName())) {
+            if ($argument = $request->get($property->getName())) {
                 $arguments[] = $argument;
-            } elseif ($argument = $request->request->get($this->transformToSnakeCase($property->getName()))) {
+            } elseif ($argument = $request->get($this->transformToSnakeCase($property->getName()))) {
                 $arguments[] = $argument;
             } else {
                 throw new \InvalidArgumentException(

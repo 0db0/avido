@@ -4,27 +4,14 @@ namespace App\EventSubscriber;
 
 use App\Event\UserRegisteredEvent;
 use App\Message\EmailVerification;
-use JetBrains\PhpStorm\ArrayShape;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class RegistrationSubscriber implements EventSubscriberInterface
 {
-    private LoggerInterface $logger;
-    private MailerInterface $mailer;
-    private MessageBusInterface $messageDispatcher;
-
-    public function __construct(
-        LoggerInterface $logger,
-        MailerInterface $mailer,
-        MessageBusInterface $messageDispatcher
-    ) {
-        $this->logger = $logger;
-        $this->mailer = $mailer;
-        $this->messageDispatcher = $messageDispatcher;
+    public function __construct(private MessageBusInterface $messageDispatcher)
+    {
     }
 
     public static function getSubscribedEvents(): array
@@ -36,20 +23,16 @@ class RegistrationSubscriber implements EventSubscriberInterface
 
     public function handleRegistration(UserRegisteredEvent $event): void
     {
-        $verification = $event->getVerification();
-        $user = $event->getUser();
-
         $email = (new TemplatedEmail())
-            ->to($user->getEmail())
+            ->to($event->getUser()->getEmail())
             ->htmlTemplate('emails/confirm_email.html.twig')
             ->context([
-                'code' => $verification->getCode(),
+                'code' => $event->getVerification()->getCode(),
             ]);
-
-
-        $this->messageDispatcher->dispatch(new EmailVerification($email));
-
-//        $this->mailer->send($email);
-//        $this->logger->info(sprintf('Verification code from Subscriber - %s', $verification->getCode()));
+        try {
+            $this->messageDispatcher->dispatch(new EmailVerification($email));
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+        }
     }
 }

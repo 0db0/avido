@@ -2,20 +2,14 @@
 
 namespace App\Message;
 
-use Symfony\Component\Mime\Email;
-
 class EmailVerification
 {
-    private Email $email;
-
-    public function __construct(Email $email)
+    public function __construct(private int $userId)
     {
-
-        $this->email = $email;
     }
 
-    public function getEmail(): Email
+    public function getUserId(): int
     {
-        return $this->email;
+        return $this->userId;
     }
 }

@@ -20,14 +20,14 @@ class SecurityController extends AbstractController
         $this->registrationService = $registrationService;
     }
 
-    #[Route("/verify", name: "verify_email", methods: ["GET"])]
-    public function verifyEmail(Request $request): Response
-    {
-        $code = $request->get('code');
-        $result = $this->registrationService->activateUserByVerificationCode($code);
-
-        return new JsonResponse(['code' => $request->get('code'), 'status' => $result]);
-    }
+//    #[Route("/verify", name: "verify_email", methods: ["GET"])]
+//    public function verifyEmail(Request $request): Response
+//    {
+//        $code = $request->get('code');
+//        $result = $this->registrationService->activateUserByVerificationCode($code);
+//
+//        return new JsonResponse(['code' => $request->get('code'), 'status' => $result]);
+//    }
 
 //    #[Route("/user/{id}/reset-password", name: "reset_password", methods: ['POST'])]
 //    public function resetPassword(): Response

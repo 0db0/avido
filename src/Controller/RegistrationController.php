@@ -3,27 +3,27 @@
 namespace App\Controller;
 
 use App\Dto\CreateUserDto;
+use App\Dto\EmailVerifyDto;
+use App\Dto\UpdatePasswordDto;
+use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
+use App\Message\TestMessage;
 use App\Service\RegistrationService;
 use App\Service\VerifyEmailService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
     public function __construct(
         private RegistrationService $registrationService,
-        private VerifyEmailService $verifyEmailService
+        private VerifyEmailService $verifyEmailService,
+        private MessageBusInterface $bus,
     ) {
     }
 
@@ -46,12 +46,36 @@ class RegistrationController extends AbstractController
         return new Response('register new user', 201);
     }
 
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request): Response
+    #[Route('/verify', name: 'app_verify_email', methods: ['GET'])]
+    #[ParamConverter('verifyDto', EmailVerifyDto::class)]
+    public function verifyUserEmail(EmailVerifyDto $verifyDto): Response
     {
-//        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-//        $this->verifyEmailService->validateEmailCode($request->get('code') ?? '');
-//        $this->registrationService->activateUserByVerificationCode();
+        $verification = $this->verifyEmailService->getVerificationByCode($verifyDto->getCode());
+        $this->registrationService->activateUserByVerification($verification);
 
+        return new Response('User activate successfully', 200);
+    }
+
+    #[Route("/user/{id}/reset-password", name: "reset_password", methods: ['POST'])]
+    public function resetPassword(): Response
+    {
+
+
+        return new Response('Requested reset password');
+    }
+
+    #[Route("/user/{id}/update-password", name: "update_password", methods: ['POST'])]
+    public function updatePassword(User $user, UpdatePasswordDto $updatePasswordDto): Response
+    {
+        $this->registrationService->updatePassword($user, $updatePasswordDto);
+        return new Response('Password updated successfully');
+    }
+
+    #[Route("/test", name: "test", methods: ["GET"])]
+    public function get(): Response
+    {
+        $this->bus->dispatch(new TestMessage(55));
+
+        return new Response('test', 201);
     }
 }

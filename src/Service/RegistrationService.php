@@ -3,33 +3,22 @@
 namespace App\Service;
 
 use App\Dto\CreateUserDto;
+use App\Dto\UpdatePasswordDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
-use App\Event\UserRegisteredEvent;
-use App\Repository\EmailVerificationRepository;
+use App\Message\EmailVerification as VerificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationService
 {
-    private UserPasswordHasherInterface $passwordHasher;
-    private EntityManagerInterface $manager;
-    private EventDispatcherInterface $eventDispatcher;
-    private EmailVerificationRepository $verificationRepository;
-
     public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $manager,
-        EventDispatcherInterface $eventDispatcher,
-        EmailVerificationRepository $verificationRepository
+        private UserPasswordHasherInterface $passwordHasher,
+        private EntityManagerInterface $manager,
+        private MessageBusInterface $bus
     ) {
-        $this->passwordHasher = $passwordHasher;
-        $this->manager = $manager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->verificationRepository = $verificationRepository;
     }
 
     public function registerNewUser(CreateUserDto $dto): User
@@ -46,7 +35,7 @@ class RegistrationService
         $this->manager->persist($verification);
         $this->manager->flush();
 
-        $this->eventDispatcher->dispatch(new UserRegisteredEvent($user, $verification), UserRegisteredEvent::NAME);
+        $this->bus->dispatch(new VerificationMessage($user->getId()));
 
         return $user;
     }
@@ -60,29 +49,18 @@ class RegistrationService
         return $verification;
     }
 
-    public function activateUserByVerificationCode(string $code): bool
+    public function updatePassword(User $user, UpdatePasswordDto $dto): void
     {
-        /** @var EmailVerification $verification */
-        $verification = $this->verificationRepository->findOneBy([
-            'code' => $code,
-            'verified_at' => null
-        ], [
-            'createdAt' => 'DESC'
-        ]);
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
 
-        if (! $verification) {
-            throw new EntityNotFoundException(sprintf('Unknown verification code: %s', $code));
-        }
+        $this->manager->flush();
+    }
 
-        if (! $this->isCodeExpired($verification)) {
-            $verification->setVerifiedAt(new \DateTime());
-            $verification->getUser()->setStatus(User::STATUS_ACTIVE);
-            $this->manager->flush();
-
-            return true;
-        }
-
-        return false;
+    public function activateUserByVerification(EmailVerification $verification): void
+    {
+        $verification->setVerifiedAt(new \DateTime());
+        $verification->getUser()->setStatus(User::STATUS_ACTIVE);
+        $this->manager->flush();
     }
 
     private function prepareCode(): string
@@ -92,13 +70,5 @@ class RegistrationService
         } catch (\Exception $e) {
             return Uuid::uuid4();
         }
-    }
-
-    private function isCodeExpired(EmailVerification $verification): bool
-    {
-        $now = (new \DateTime())->getTimestamp();
-        $createdAt = $verification->getCreatedAt()->getTimestamp();
-
-        return $now - $createdAt > 3600;
     }
 }

@@ -7,7 +7,7 @@ services:
       context: docker/nginx
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - "80:80"
     depends_on:
       - fpm
       - db
@@ -34,7 +34,7 @@ services:
     container_name: app.database
     image: postgres:13-alpine
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - postgres_volume:/var/lib/postgresql/data
     environment:
@@ -73,7 +73,7 @@ services:
     restart: always
     image: mongo:5.0.0-rc1
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - mongodb_volume:/data/db
     environment:
@@ -88,7 +88,7 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: "${ME_CONFIG_MONGODB_ADMINUSERNAME}"
       ME_CONFIG_MONGODB_ADMINPASSWORD: "${ME_CONFIG_MONGODB_ADMINPASSWORD}"
@@ -99,7 +99,7 @@ services:
     container_name: app.redis
     image: redis:alpine
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: unless-stopped
     volumes:
       - redis_volume:/data
@@ -110,12 +110,12 @@ services:
   message-broker:
     container_name: app.rabbitmq
     image: rabbitmq:3-management-alpine
-#    environment:
-#      RABBITMQ_DEFAULT_USER: 'guest'
-#      RABBITMQ_DEFAULT_PASS: 'guest'
+    environment:
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
     networks:
       - app
 
