@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\CreateUserDto;
 use App\Dto\EmailVerifyDto;
+use App\Dto\ResetPasswordDto;
 use App\Dto\UpdatePasswordDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
@@ -56,7 +57,8 @@ class RegistrationController extends AbstractController
         return new Response('User activate successfully', 200);
     }
 
-    #[Route("/user/{id}/reset-password", name: "reset_password", methods: ['POST'])]
+    #[Route("/reset-password", name: "reset_password", methods: ['POST'])]
+    #[ParamConverter('resetPasswordDto', ResetPasswordDto::class)]
     public function resetPassword(): Response
     {
 
