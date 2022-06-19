@@ -10,10 +10,12 @@ RUN apk add --no-cache autoconf g++ make libressl-dev rabbitmq-c-dev \
     && pecl install xdebug-3.0.2 \
     && pecl install mongodb \
     && rm -rf /tmp/pear \
+    && pecl install redis \
 #    && docker-php-ext-install mysqli pdo pdo_mysql \
 #    && docker-php-ext-enable pdo_mysql \
     && docker-php-ext-enable xdebug \
-    && docker-php-ext-enable mongodb
+    && docker-php-ext-enable mongodb \
+    && docker-php-ext-enable redis
 #    && docker-php-ext-enable amqp
 
 RUN apk add --no-cache postgresql-dev fcgi \

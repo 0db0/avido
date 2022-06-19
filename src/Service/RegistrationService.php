@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Dto\CreateUserDto;
-use App\Dto\UpdatePasswordDto;
+use App\Dto\Request\CreateUserDto;
+use App\Dto\Request\UpdatePasswordDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Message\EmailVerification as VerificationMessage;

@@ -23,16 +23,16 @@ class RegistrationSubscriber implements EventSubscriberInterface
 
     public function handleRegistration(UserRegisteredEvent $event): void
     {
-        $email = (new TemplatedEmail())
-            ->to($event->getUser()->getEmail())
-            ->htmlTemplate('emails/confirm_email.html.twig')
-            ->context([
-                'code' => $event->getVerification()->getCode(),
-            ]);
-        try {
-            $this->messageDispatcher->dispatch(new EmailVerification($email));
-        } catch (\Throwable $e) {
-            dd($e->getMessage());
-        }
+//        $email = (new TemplatedEmail())
+//            ->to($event->getUser()->getEmail())
+//            ->htmlTemplate('emails/confirm_email.html.twig')
+//            ->context([
+//                'code' => $event->getVerification()->getCode(),
+//            ]);
+//        try {
+//            $this->messageDispatcher->dispatch(new EmailVerification($email));
+//        } catch (\Throwable $e) {
+//            dd($e->getMessage());
+//        }
     }
 }

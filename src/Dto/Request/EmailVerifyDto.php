@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Dto;
+namespace App\Dto\Request;
 
 use App\Validator\CodeNotExpired as CustomAssert;
 use Symfony\Component\Validator\Constraints as Assert;

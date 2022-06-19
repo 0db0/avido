@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Dto;
+namespace App\Dto\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class ResetPasswordDto
+final class ForgotPasswordDto
 {
-    #[Assert\NotBlank]
-    #[Assert\Email]
-
     public function __construct(private string $email)
     {
     }
 
+    #[Assert\NotBlank]
+    #[Assert\Email]
     public function getEmail(): string
     {
         return $this->email;

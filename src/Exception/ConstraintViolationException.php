@@ -2,7 +2,9 @@
 
 namespace App\Exception;
 
-class ConstraintViolationException extends \Exception
+use Exception;
+
+class ConstraintViolationException extends Exception
 {
 
 }

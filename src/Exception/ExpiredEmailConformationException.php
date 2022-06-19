@@ -2,6 +2,8 @@
 
 namespace App\Exception;
 
-class ExpiredEmailConformationException extends \Exception
+use Exception;
+
+class ExpiredEmailConformationException extends Exception
 {
 }
