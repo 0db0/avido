@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Controller\Api;
 
 use App\Tests\AbstractWebTest;
+use Exception;
 use JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,7 @@ class RegistrationControllerTest extends AbstractWebTest
 {
     /**
      * @throws JsonException
+     * @throws Exception
      */
     public function testRegisterNewUser(): void
     {

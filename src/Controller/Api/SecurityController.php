@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api\Api;
 
 use App\Dto\CreateUserDto;
 use App\Service\RegistrationService;
