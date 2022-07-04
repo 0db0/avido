@@ -20,9 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     public function __construct(
-        private RegistrationService $registrationService,
-        private VerifyEmailService $verifyEmailService,
-        private AuthService $authService,
+        private readonly RegistrationService $registrationService,
+        private readonly VerifyEmailService  $verifyEmailService,
+        private readonly AuthService         $authService,
     ) {
     }
 

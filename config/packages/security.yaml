@@ -29,5 +29,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { host: admin.%app.host%, roles: ROLE_ADMIN }
+         - { host: moderator.%app.host%, roles: ROLE_MODERATOR }
         # - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+      ROLE_ADMIN: [ROLE_MODERATOR, ROLE_USER]
