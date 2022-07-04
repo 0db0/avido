@@ -1,6 +1,37 @@
 controllers:
-    resource: ../../src/Controller/
+    resource: ../../src/Controller/*/*
     type: annotation
+    exclude:
+        - ../../src/Controller/Api/
+        - ../../src/Controller/Web/
+
+api:
+    resource: ../../src/Controller/Api
+    type: annotation
+    host: api.%app.host%
+    prefix: v1
+    name_prefix: api_
+
+web:
+    resource: ../../src/Controller/Web
+    type: annotation
+    host: '%app.host%'
+    name_prefix: web_
+    exclude:
+        - ../../src/Controller/Web/Admin
+        - ../../src/Controller/Web/Moderator
+
+web_admin:
+    resource: ../../src/Controller/Web/Admin
+    type: annotation
+    host: admin.%app.host%
+    name_prefix: web_admin_
+
+web_moderator:
+    resource: ../../src/Controller/Web/Moderator
+    type: annotation
+    host: moderator.%app.host%
+    name_prefix: web_moderator_
 
 kernel:
     resource: ../../src/Kernel.php

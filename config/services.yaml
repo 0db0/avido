@@ -7,6 +7,7 @@ parameters:
     app.reset_password_token.lifetime: 86400
 
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    app.host: '%env(APP_HOST)%'
 
 services:
     # default configuration for services in *this* file
