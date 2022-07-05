@@ -20,6 +20,7 @@ final class CreateUserDto
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
+    #[Assert\NotCompromisedPassword]
     private string $password;
 
     public function __construct(
@@ -28,10 +29,10 @@ final class CreateUserDto
         string $email,
         string $password
     ) {
-        $this->firstName                  = $firstName;
-        $this->lastName                   = $lastName;
-        $this->email                      = $email;
-        $this->password                   = $password;
+        $this->firstName = $firstName;
+        $this->lastName  = $lastName;
+        $this->email     = $email;
+        $this->password  = $password;
     }
 
     public function getFirstName(): string

@@ -6,6 +6,8 @@ use App\Dto\Request\CreateUserDto;
 use App\Dto\Request\UpdatePasswordDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
+use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use App\Message\EmailVerification as VerificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
@@ -23,12 +25,8 @@ class RegistrationService
 
     public function registerNewUser(CreateUserDto $dto): User
     {
-        $user = new User();
-        $user->setFirstname($dto->getFirstName());
-        $user->setLastname($dto->getLastName());
-        $user->setEmail($dto->getEmail());
-        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
-        $user->setStatus(User::STATUS_AWAITING_EMAIL_ACTIVATION);
+        $user = $this->makeNewUser($dto);
+        $user->setStatus(UserStatus::Awaiting_email_activation);
         $verification = $this->generateVerificationCode($user);
 
         $this->manager->persist($user);
@@ -36,6 +34,30 @@ class RegistrationService
         $this->manager->flush();
 
         $this->bus->dispatch(new VerificationMessage($user->getId()));
+
+        return $user;
+    }
+
+    public function registerNewAdmin(CreateUserDto $dto): User
+    {
+        $admin = $this->makeNewUser($dto);
+        $admin->setStatus(UserStatus::Active);
+        $admin->setIsVerified(true);
+        $admin->setRoles([UserRole::Admin]);
+
+        $this->manager->persist($admin);
+        $this->manager->flush();
+
+        return $admin;
+    }
+
+    private function makeNewUser(CreateUserDto $dto): User
+    {
+        $user = new User();
+        $user->setFirstname($dto->getFirstName());
+        $user->setLastname($dto->getLastName());
+        $user->setEmail($dto->getEmail());
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
 
         return $user;
     }
