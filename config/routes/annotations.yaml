@@ -15,7 +15,6 @@ api:
 web:
     resource: ../../src/Controller/Web
     type: annotation
-    host: '%app.host%'
     name_prefix: web_
     exclude:
         - ../../src/Controller/Web/Admin
@@ -24,13 +23,13 @@ web:
 web_admin:
     resource: ../../src/Controller/Web/Admin
     type: annotation
-    host: admin.%app.host%
+    prefix: /admin
     name_prefix: web_admin_
 
 web_moderator:
     resource: ../../src/Controller/Web/Moderator
     type: annotation
-    host: moderator.%app.host%
+    prefix: /moderator
     name_prefix: web_moderator_
 
 kernel:

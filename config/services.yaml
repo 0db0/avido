@@ -32,3 +32,11 @@ services:
     App\EventListener\RegistrationListener:
         tags:
             - { name: kernel.event_listener, event: user.registered }
+
+    Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator
+
+    App\Security\CustomAuthenticators\JWTAuthenticator:
+        class: App\Security\CustomAuthenticators\JWTAuthenticator
+#        arguments:
+#            $jwtAuthenticator: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator'

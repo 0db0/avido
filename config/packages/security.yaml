@@ -7,7 +7,7 @@ security:
             entity:
                 class: App\Entity\User
                 property: email
-        users_in_memory: { memory: null }
+#        users_in_memory: { memory: null }
     password_hasher:
             class: App\Entity\User
             algorithm: auto
@@ -16,9 +16,38 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        login:
+          pattern: /login
+          stateless: true
+          provider: app_user_provider
+          json_login:
+            check_path: api_login
+            success_handler: lexik_jwt_authentication.handler.authentication_success
+            failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+          host: ^api\.%app.host%$
+          stateless: true
+#          provider: app_user_provider
+#          jwt: ~
+#          refresh_jwt:
+#            check_path: api_refresh_token
+          custom-authenticators:
+            - App\Security\CustomAuthenticators\JWTAuthenticator
+
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+
+            form_login:
+                login_path: web_login
+                check_path: web_login
+                enable_csrf: true
+                default_target_path: web_admin_account
+
+            logout:
+              path: app_logout
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -29,8 +58,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { host: admin.%app.host%, roles: ROLE_ADMIN }
-         - { host: moderator.%app.host%, roles: ROLE_MODERATOR }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: /login, roles: PUBLIC_ACCESS }
+         - { path: ^/admin, roles: ROLE_ADMIN }
+         - { host: ^/moderator, roles: ROLE_MODERATOR }
+         - { host: ^api\., roles: IS_AUTHENTICATED_FULLY }
+         - { path: /account, roles: IS_AUTHENTICATED_FULLY }
+
     role_hierarchy:
       ROLE_ADMIN: [ROLE_MODERATOR, ROLE_USER]

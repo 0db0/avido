@@ -1,3 +1,11 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+app_logout:
+  path: /logout
+  methods: GET
+
+api_refresh_token:
+  path: /v1/token/refresh
+  host: ^api\.%app.host%
+  controller: gesdinet.jwtrefreshtoken::refresh
