@@ -19,10 +19,6 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'login', methods: ['GET'])]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
-//        dd(
-//            $this->authenticator
-//        );
-
         return $this->json([
             'user' => $user?->getUserIdentifier(),
             'token' => 'asdasdasd',

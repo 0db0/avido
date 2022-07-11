@@ -18,6 +18,7 @@ security:
             security: false
 
         login:
+          host: ^api\.
           pattern: /login
           stateless: true
           provider: app_user_provider
@@ -29,12 +30,13 @@ security:
         api:
           host: ^api\.%app.host%$
           stateless: true
-#          provider: app_user_provider
-#          jwt: ~
-#          refresh_jwt:
-#            check_path: api_refresh_token
-          custom-authenticators:
-            - App\Security\CustomAuthenticators\JWTAuthenticator
+          provider: app_user_provider
+          jwt: ~
+          refresh_jwt:
+            check_path: api_refresh_token
+          entry_point: refresh_jwt
+#          custom-authenticators:
+#            - App\Security\CustomAuthenticators\JWTAuthenticator
 
         main:
             lazy: true
@@ -44,6 +46,7 @@ security:
                 login_path: web_login
                 check_path: web_login
                 enable_csrf: true
+                success_handler: App\Security\CustomAuthenticators\AuthenticationSuccessHandler
                 default_target_path: web_admin_account
 
             logout:

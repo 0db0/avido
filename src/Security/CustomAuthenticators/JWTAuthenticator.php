@@ -57,8 +57,6 @@ final class JWTAuthenticator implements AuthenticatorInterface, AuthenticationEn
 
     public function setBaseAuthenticator(AuthenticatorInterface $baseAuthenticator): void
     {
-        throw new \Exception('foo-bar');
-
         $this->jwtAuthenticator = $baseAuthenticator;
     }
 }
