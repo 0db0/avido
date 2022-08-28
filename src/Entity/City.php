@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,19 +38,64 @@ class City
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $updatedAt;
+    private DateTime $updatedAt;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getRegion(): Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(Region $region): void
+    {
+        $this->region = $region;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
 
     /**
      * @ORM\PrePersist
      */
     public function setInitialTime(): void
     {
-        $this->createdAt = $this->updatedAt = new \DateTime();
+        $this->createdAt = $this->updatedAt = new DateTime();
     }
 
     /**
@@ -57,6 +103,6 @@ class City
      */
     public function setUpdatedAt(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
     }
 }
