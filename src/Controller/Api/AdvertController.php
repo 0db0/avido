@@ -23,7 +23,6 @@ final class AdvertController extends AbstractController
 
     public function create(CreateAdvertDto $createDto): JsonResponse
     {
-        dd('fooooof');
         $this->denyAccessUnlessGranted(AdvertPermissions::CREATE);
         $advert = $this->advertService->create($createDto, $this->getUser());
 
@@ -39,8 +38,8 @@ final class AdvertController extends AbstractController
         $this->denyAccessUnlessGranted(AdvertPermissions::SHOW, $advert);
 
         return $this->json([
-            'message' => 'Advert fetched.',
-            'id'      => $advert->toArray(),
+            'message' => 'Advert fetched',
+            'data'    => $advert->toArray(),
         ]);
     }
 

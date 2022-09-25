@@ -39,8 +39,8 @@ security:
           refresh_jwt:
             check_path: api_refresh_token
           entry_point: jwt
-          custom-authenticators:
-            - App\Security\CustomAuthenticators\JWTAuthenticator
+#          custom-authenticators:
+#            - App\Security\CustomAuthenticators\JWTAuthenticator
 
         main:
             lazy: true

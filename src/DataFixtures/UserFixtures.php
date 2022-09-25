@@ -11,6 +11,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
 {
     private const COUNT_USER = 5;
     private const PLAIN_PASSWORD = 'password';
+    public const USER_REFERENCE = 'user_';
 
     private UserPasswordHasherInterface $passwordHasher;
 
@@ -32,6 +33,8 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
             $user->setPassword($this->passwordHasher->hashPassword($user, self::PLAIN_PASSWORD));
 
             $manager->persist($user);
+
+            $this->addReference(self::USER_REFERENCE . $i, $user);
         }
 
         $manager->flush();

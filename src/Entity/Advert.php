@@ -194,14 +194,14 @@ class Advert
         }
     }
 
-    public function getStatus(): int
+    public function getStatus(): AdvertStatus
     {
-        return $this->status;
+        return AdvertStatus::from($this->status);
     }
 
-    public function setStatus(int $status): void
+    public function setStatus(AdvertStatus $status): void
     {
-        $this->status = $status;
+        $this->status = $status->value;
     }
 
     public function getCreatedAt(): \DateTime
@@ -233,7 +233,7 @@ class Advert
             'status'      => AdvertStatus::from($this->status)->name,
             'seller_id'   => $this->seller->getId(),
             'category'    => $this->category->getName(),
-            'city'        => $this->city->getName(),
+            'city'        => $this->city?->getName(),
             'description' => $this->description,
             'cost'        => $this->cost,
             'count_views' => $this->countViews,
