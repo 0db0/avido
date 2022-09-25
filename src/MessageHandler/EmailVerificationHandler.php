@@ -12,9 +12,9 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 class EmailVerificationHandler implements MessageHandlerInterface
 {
     public function __construct(
-        private MailerInterface             $mailer,
-        private UserRepository              $userRepository,
-        private EmailVerificationRepository $verificationRepository,
+        private readonly MailerInterface             $mailer,
+        private readonly UserRepository              $userRepository,
+        private readonly EmailVerificationRepository $verificationRepository,
     ) {
     }
 

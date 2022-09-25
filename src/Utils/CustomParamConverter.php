@@ -28,15 +28,14 @@ class CustomParamConverter implements ParamConverterInterface
             if ($configuration->getClass() === $parameter->getType()?->getName()) {
                 $reflectionClass = new \ReflectionClass($configuration->getClass());
                 $properties = $reflectionClass->getProperties();
-                $arguments = $this->getArguments($properties, $request);
 
+                $arguments = $this->getArguments($properties, $request);
                 try {
                     $objectDto = $reflectionClass->newInstance(...$arguments);
                 } catch (ReflectionException $e) {
 //                    todo: loggin exception
                     return false;
                 }
-
                 $errors = $this->validator->validate($objectDto);
                 if ($errors->count() > 0) {
                     $message = $this->validator->prepareMessage($errors);

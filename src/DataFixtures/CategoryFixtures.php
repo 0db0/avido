@@ -9,7 +9,7 @@ class CategoryFixtures extends BaseFixtures
 {
     private const COUNT_FIXTURES = 5;
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < self::COUNT_FIXTURES; $i++) {
             $category = new Category();

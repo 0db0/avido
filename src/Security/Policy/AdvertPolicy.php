@@ -17,11 +17,11 @@ final class AdvertPolicy
 
     public function canCreate(User $user): bool
     {
-        if (! $this->security->isGranted(UserRole::User->value)) {
+        if ($user->getStatus() !== UserStatus::Active) {
             return false;
         }
 
-        return $user->getStatus() === UserStatus::Active;
+        return $this->security->isGranted(UserRole::User->value);
     }
 
     public function canList(User $user): bool
@@ -31,17 +31,23 @@ final class AdvertPolicy
 
     public function canShow(User $user, Advert $advert): bool
     {
+        if ($user->getStatus() !== UserStatus::Active) {
+            return false;
+        }
+
         if ($this->security->isGranted([UserRole::Admin->value, UserRole::Moderator->value])) {
             return true;
         }
 
-        return $user->getStatus() === UserStatus::Active
-            && $advert->getSeller()->getId() === $user->getId();
+        return $advert->getSeller()->getId() === $user->getId();
     }
 
     public function canEdit(User $user, Advert $advert): bool
     {
-        return $user->getStatus() === UserStatus::Active
-            && $advert->getSeller()->getId() === $user->getId();
+         if ($user->getStatus() !== UserStatus::Active) {
+             return false;
+         }
+
+         return $advert->getSeller()->getId() === $user->getId();
     }
 }

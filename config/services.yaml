@@ -29,9 +29,9 @@ services:
     # please note that last definitions always *replace* previous ones
 
     #Custom Listeners
-    App\EventListener\RegistrationListener:
-        tags:
-            - { name: kernel.event_listener, event: user.registered }
+#    App\EventListener\RegistrationListener:
+#        tags:
+#            - { name: kernel.event_listener, event: user.registered }
 
     App\Security\CustomAuthenticators\AuthenticationSuccessHandler:
         class: App\Security\CustomAuthenticators\AuthenticationSuccessHandler
