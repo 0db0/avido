@@ -4,6 +4,7 @@ namespace App\Security\Policy;
 
 use App\Entity\Advert;
 use App\Entity\User;
+use App\Enum\AdvertStatus;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
 use Symfony\Component\Security\Core\Security;
@@ -48,6 +49,23 @@ final class AdvertPolicy
              return false;
          }
 
-         return $advert->getSeller()->getId() === $user->getId();
+         if ($advert->getSeller()->getId() !== $user->getId()) {
+             return false;
+         }
+
+         return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
+    }
+
+    public function canPushToModeration(User $user, Advert $advert): bool
+    {
+        if ($user->getStatus() !== UserStatus::Active) {
+            return false;
+        }
+
+        if ($advert->getSeller()->getId() !== $user->getId()) {
+            return false;
+        }
+
+        return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
     }
 }

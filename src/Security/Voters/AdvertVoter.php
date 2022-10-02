@@ -20,8 +20,11 @@ final class AdvertVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return match($attribute) {
-            AdvertPermissions::CREATE, AdvertPermissions::LIST => is_null($subject),
-            AdvertPermissions::SHOW, AdvertPermissions::EDIT   => $subject instanceof Advert,
+            AdvertPermissions::CREATE,
+            AdvertPermissions::LIST               => is_null($subject),
+            AdvertPermissions::SHOW,
+            AdvertPermissions::EDIT,
+            AdvertPermissions::PUSH_TO_MODERATION => $subject instanceof Advert,
 
             default => false,
         };
@@ -39,10 +42,11 @@ final class AdvertVoter extends Voter
         }
 
         return match ($attribute) {
-            AdvertPermissions::CREATE => $this->policy->canCreate($user),
-            AdvertPermissions::LIST   => $this->policy->canList($user),
-            AdvertPermissions::SHOW   => $this->policy->canShow($user, $subject),
-            AdvertPermissions::EDIT   => $this->policy->canEdit($user, $subject),
+            AdvertPermissions::CREATE             => $this->policy->canCreate($user),
+            AdvertPermissions::LIST               => $this->policy->canList($user),
+            AdvertPermissions::SHOW               => $this->policy->canShow($user, $subject),
+            AdvertPermissions::EDIT               => $this->policy->canEdit($user, $subject),
+            AdvertPermissions::PUSH_TO_MODERATION => $this->policy->canPushToModeration($user, $subject),
 
             default => throw new Exception(),
         };
