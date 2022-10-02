@@ -22,7 +22,7 @@ final class AdvertService
         $advert->setCity($dto->city);
         $advert->setDescription($dto->description);
         $advert->setCost($dto->cost);
-        $advert->setStatus(AdvertStatus::draft->value);
+        $advert->setStatus(AdvertStatus::draft);
         $advert->setSeller($user);
 
         $this->em->persist($advert);
