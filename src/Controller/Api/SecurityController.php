@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Api\Api;
+namespace App\Controller\Api;
 
 use App\Dto\CreateUserDto;
 use App\Service\RegistrationService;
@@ -13,11 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
-    private RegistrationService $registrationService;
-
-    public function __construct(RegistrationService $registrationService)
+    public function __construct(private readonly RegistrationService $registrationService)
     {
-        $this->registrationService = $registrationService;
     }
 
 //    #[Route("/verify", name: "verify_email", methods: ["GET"])]

@@ -7,6 +7,7 @@ parameters:
     app.reset_password_token.lifetime: 86400
 
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    app.host: '%env(APP_HOST)%'
 
 services:
     # default configuration for services in *this* file
@@ -31,3 +32,16 @@ services:
     App\EventListener\RegistrationListener:
         tags:
             - { name: kernel.event_listener, event: user.registered }
+
+    App\Security\CustomAuthenticators\AuthenticationSuccessHandler:
+        class: App\Security\CustomAuthenticators\AuthenticationSuccessHandler
+
+
+# for custom auth
+#    Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator:
+#        class: Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator
+
+#    App\Security\CustomAuthenticators\JWTAuthenticator:
+#        class: App\Security\CustomAuthenticators\JWTAuthenticator
+#        arguments:
+#            $jwtAuthenticator: '@Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator'

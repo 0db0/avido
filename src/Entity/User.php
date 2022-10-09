@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Enum\UserRole;
+use App\Enum\UserStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -179,29 +181,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->whenConvenientReceiveCalls = $whenConvenientReceiveCalls;
     }
 
-    public function getStatus(): int
+    public function getStatus(): UserStatus
     {
-        return $this->status;
+        return UserStatus::from($this->status);
     }
 
 
-    public function setStatus(int $status): void
+    public function setStatus(UserStatus $status): void
     {
-        $this->status = $status;
+        $this->status = $status->value;
     }
 
     public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function setAwaitingStatus(): void
-    {
-        $this->status = self::STATUS_AWAITING_EMAIL_ACTIVATION;
-    }
+//
+//    /**
+//     * @ORM\PrePersist
+//     */
+//    public function setAwaitingStatus(): void
+//    {
+//        $this->status = UserStatus::Awaiting_email_activation->value;
+//    }
 
     /**
      * @ORM\PrePersist
@@ -229,14 +231,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
 
         if (empty($roles)) {
-            $roles[] = 'ROLE_USER';
+            $roles[] = UserRole::User->value;
         }
 
         return array_unique($roles);
     }
 
+    /**
+     * @param UserRole[] $roles
+     */
     public function setRoles(array $roles): void
     {
+        $roles = array_map(static fn (UserRole $v): string => $v->value, $roles);
         $this->roles = $roles;
     }
 

@@ -1,4 +1,4 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.1-fpm-alpine
 
 ARG uid
 
@@ -7,7 +7,7 @@ RUN apk add --no-cache autoconf g++ make libressl-dev rabbitmq-c-dev \
     && curl -fsSL https://pecl.php.net/get/amqp | tar xvz -C "/usr/src/php/ext/amqp" --strip 1 \
 #    && pecl install amqp \
     && docker-php-ext-install amqp \
-    && pecl install xdebug-3.0.2 \
+    && pecl install xdebug-3.1.5 \
     && pecl install mongodb \
     && rm -rf /tmp/pear \
     && pecl install redis \
