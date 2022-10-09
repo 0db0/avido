@@ -16,24 +16,12 @@ class LoginController extends AbstractController
     {
     }
 
-    #[Route('/login', name: 'login', methods: ['GET'])]
+    #[Route('/login', name: 'login', methods: ['POST'])]
     public function index(#[CurrentUser] ?User $user): JsonResponse
     {
         return $this->json([
             'user' => $user?->getUserIdentifier(),
             'token' => 'asdasdasd',
-        ]);
-    }
-
-    #[Route('/post', name: 'post', methods: ['GET'])]
-    public function post(#[CurrentUser] ?User $user): JsonResponse
-    {
-        dd(
-            $this->container->get('security.token_storage')->getToken()
-        );
-
-        return $this->json([
-            'post' => 'achieved',
         ]);
     }
 }

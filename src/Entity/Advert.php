@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\AdvertStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -193,14 +194,14 @@ class Advert
         }
     }
 
-    public function getStatus(): int
+    public function getStatus(): AdvertStatus
     {
-        return $this->status;
+        return AdvertStatus::from($this->status);
     }
 
-    public function setStatus(int $status): void
+    public function setStatus(AdvertStatus $status): void
     {
-        $this->status = $status;
+        $this->status = $status->value;
     }
 
     public function getCreatedAt(): \DateTime
@@ -222,5 +223,22 @@ class Advert
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id'          => $this->id,
+            'name'        => $this->name,
+            'status'      => AdvertStatus::from($this->status)->name,
+            'seller_id'   => $this->seller->getId(),
+            'category'    => $this->category->getName(),
+            'city'        => $this->city?->getName(),
+            'description' => $this->description,
+            'cost'        => $this->cost,
+            'count_views' => $this->countViews,
+            'created_at'  => $this->createdAt,
+            'updated_at'  => $this->updatedAt,
+        ];
     }
 }

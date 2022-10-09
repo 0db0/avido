@@ -11,15 +11,17 @@ use App\Enum\UserStatus;
 use App\Message\EmailVerification as VerificationMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationService
 {
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher,
-        private EntityManagerInterface $manager,
-        private MessageBusInterface $bus
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly EntityManagerInterface      $manager,
+        private readonly MailerInterface             $mailer,
+        private readonly MessageBusInterface         $bus
     ) {
     }
 
@@ -32,6 +34,8 @@ class RegistrationService
         $this->manager->persist($user);
         $this->manager->persist($verification);
         $this->manager->flush();
+
+//        $this->mailer->send();
 
         $this->bus->dispatch(new VerificationMessage($user->getId()));
 
@@ -81,7 +85,7 @@ class RegistrationService
     public function activateUserByVerification(EmailVerification $verification): void
     {
         $verification->setVerifiedAt(new \DateTime());
-        $verification->getUser()->setStatus(User::STATUS_ACTIVE);
+        $verification->getUser()->setStatus(UserStatus::Active);
         $this->manager->flush();
     }
 

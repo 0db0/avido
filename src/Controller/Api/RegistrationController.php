@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegistrationController extends AbstractController
+final class RegistrationController extends AbstractController
 {
     public function __construct(
         private readonly RegistrationService $registrationService,

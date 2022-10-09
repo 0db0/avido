@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.reset_password_token.lifetime: 86400
+    app.moderation.email: 'moderation@exmaple.com'
 
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
     app.host: '%env(APP_HOST)%'
@@ -29,9 +30,9 @@ services:
     # please note that last definitions always *replace* previous ones
 
     #Custom Listeners
-    App\EventListener\RegistrationListener:
-        tags:
-            - { name: kernel.event_listener, event: user.registered }
+#    App\EventListener\RegistrationListener:
+#        tags:
+#            - { name: kernel.event_listener, event: user.registered }
 
     App\Security\CustomAuthenticators\AuthenticationSuccessHandler:
         class: App\Security\CustomAuthenticators\AuthenticationSuccessHandler

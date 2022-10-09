@@ -8,13 +8,13 @@ use JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegistrationControllerTest extends AbstractWebTest
+class AdvertTest extends AbstractWebTest
 {
     /**
      * @throws JsonException
      * @throws Exception
      */
-    public function testRegisterNewUser(): void
+    public function testCreateNew201(): void
     {
         $payload = [
             'first_name' => $this->faker->firstName,
