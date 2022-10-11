@@ -2,11 +2,11 @@
 
 namespace App\Controller\Api;
 
-use App\Dto\Request\CreateUserDto;
 use App\Dto\Request\EmailVerifyDto;
 use App\Dto\Request\ForgotPasswordDto;
 use App\Dto\Request\ResetPasswordDto;
 use App\Dto\Request\UpdatePasswordDto;
+use App\Dto\Request\User\RegisterUserDto;
 use App\Entity\User;
 use App\Service\Auth\AuthService;
 use App\Service\RegistrationService;
@@ -27,8 +27,8 @@ final class RegistrationController extends AbstractController
     }
 
     #[Route("/register", name: "register", methods: ["POST"])]
-    #[ParamConverter("userDto", CreateUserDto::class)]
-    public function register(CreateUserDto $userDto): JsonResponse
+    #[ParamConverter("userDto", RegisterUserDto::class)]
+    public function register(RegisterUserDto $userDto): JsonResponse
     {
         $user = $this->registrationService->registerNewUser($userDto);
 

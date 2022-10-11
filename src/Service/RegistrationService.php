@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
-use App\Dto\Request\CreateUserDto;
 use App\Dto\Request\UpdatePasswordDto;
+use App\Dto\Request\User\AbstractCreateUserDto;
+use App\Dto\Request\User\CreateUserDto;
+use App\Dto\Request\User\RegisterUserDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
@@ -25,9 +27,10 @@ class RegistrationService
     ) {
     }
 
-    public function registerNewUser(CreateUserDto $dto): User
+    public function registerNewUser(RegisterUserDto $dto): User
     {
         $user = $this->makeNewUser($dto);
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
         $user->setStatus(UserStatus::Awaiting_email_activation);
         $verification = $this->generateVerificationCode($user);
 
@@ -42,9 +45,29 @@ class RegistrationService
         return $user;
     }
 
-    public function registerNewAdmin(CreateUserDto $dto): User
+    public function createNewUser(CreateUserDto $dto): User
+    {
+        $user = $this->makeNewUser($dto);
+
+        if ($dto->getRole()) {
+            $user->setRoles([$dto->getRole()]);
+        }
+
+        $user->setStatus(UserStatus::Awaiting_email_activation);
+
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+//        $this->mailer->send();
+
+// todo: send mail to set password.
+        return $user;
+    }
+
+    public function registerNewAdmin(RegisterUserDto $dto): User
     {
         $admin = $this->makeNewUser($dto);
+        $admin->setPassword($this->passwordHasher->hashPassword($admin, $dto->password));
         $admin->setStatus(UserStatus::Active);
         $admin->setIsVerified(true);
         $admin->setRoles([UserRole::Admin]);
@@ -55,13 +78,12 @@ class RegistrationService
         return $admin;
     }
 
-    private function makeNewUser(CreateUserDto $dto): User
+    private function makeNewUser(AbstractCreateUserDto $dto): User
     {
         $user = new User();
-        $user->setFirstname($dto->getFirstName());
-        $user->setLastname($dto->getLastName());
-        $user->setEmail($dto->getEmail());
-        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
+        $user->setFirstname($dto->firstName);
+        $user->setLastname($dto->lastName);
+        $user->setEmail($dto->email);
 
         return $user;
     }

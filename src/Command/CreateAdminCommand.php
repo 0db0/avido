@@ -5,7 +5,7 @@ namespace App\Command;
 use App\Command\Question\EmailQuestion;
 use App\Command\Question\NameQuestion;
 use App\Command\Question\PasswordQuestion;
-use App\Dto\Request\CreateUserDto;
+use App\Dto\Request\User\RegisterUserDto;
 use App\Service\RegistrationService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -39,7 +39,7 @@ final class CreateAdminCommand extends Command
         $lastname = $io->askQuestion(new NameQuestion('Please, type last name:'));
         $password = $io->askQuestion(new PasswordQuestion('Please, type password:'));
 
-        $dto = new CreateUserDto($firstname, $lastname, $email,  $password);
+        $dto = new RegisterUserDto($firstname, $lastname, $email,  $password);
         $this->registrationService->registerNewAdmin($dto);
 
         $io->success('New admin created!');
