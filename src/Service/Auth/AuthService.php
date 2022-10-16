@@ -5,7 +5,7 @@ namespace App\Service\Auth;
 use App\Dto\Request\ForgotPasswordDto;
 use App\Dto\Request\ResetPasswordDto;
 use App\Dto\ResetPasswordTokenDto;
-use App\Email\Advert\ResetPasswordEmail;
+use App\Email\Password\ResetPasswordEmail;
 use App\Exception\DeletePasswordTokenException;
 use App\Exception\InvalidResetPasswordTokenException;
 use App\Repository\UserRepository;

@@ -7,7 +7,7 @@ use App\Dto\Request\User\AbstractCreateUserDto;
 use App\Dto\Request\User\CreateUserDto;
 use App\Dto\Request\User\RegisterUserDto;
 use App\Dto\Request\User\UpdateUserDto;
-use App\Email\Advert\SetupPasswordEmail;
+use App\Email\Password\SetupPasswordEmail;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
