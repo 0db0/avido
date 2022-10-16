@@ -11,6 +11,6 @@ final class TokenGenerator
     {
         $token = 'asdasd';
 
-        return new ResetPasswordTokenDto($token, $user);
+        return new ResetPasswordTokenDto($user, $token);
     }
 }

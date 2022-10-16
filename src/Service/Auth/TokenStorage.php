@@ -32,7 +32,7 @@ class TokenStorage
 
             $item->expiresAfter($this->params->get('app.reset_password_token.lifetime'));
 
-            return $tokenDto->getToken();
+            return $tokenDto->token;
         });
     }
 

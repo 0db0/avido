@@ -7,6 +7,7 @@ use App\Dto\Request\User\AbstractCreateUserDto;
 use App\Dto\Request\User\CreateUserDto;
 use App\Dto\Request\User\RegisterUserDto;
 use App\Dto\Request\User\UpdateUserDto;
+use App\Email\Advert\SetupPasswordEmail;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
@@ -59,9 +60,8 @@ class UserRegistration
         $this->manager->persist($user);
         $this->manager->flush();
 
-//        $this->mailer->send();
+        $this->mailer->send(SetupPasswordEmail::build());
 
-// todo: send mail to set password.
         return $user;
     }
 

@@ -6,17 +6,9 @@ use App\Entity\User;
 
 class ResetPasswordTokenDto
 {
-    public function __construct(private User $user, private string $token)
-    {
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function getToken(): string
-    {
-        return $this->token;
+    public function __construct(
+        public readonly User $user,
+        public readonly string $token
+    ) {
     }
 }

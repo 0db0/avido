@@ -5,6 +5,7 @@ namespace App\Service\Auth;
 use App\Dto\Request\ForgotPasswordDto;
 use App\Dto\Request\ResetPasswordDto;
 use App\Dto\ResetPasswordTokenDto;
+use App\Email\Advert\ResetPasswordEmail;
 use App\Exception\DeletePasswordTokenException;
 use App\Exception\InvalidResetPasswordTokenException;
 use App\Repository\UserRepository;
@@ -12,19 +13,18 @@ use App\Service\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class AuthService
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private TokenGenerator $tokenGenerator,
-        private TokenStorage $tokenStorage,
-        private MailerInterface $mailer,
-        private UserPasswordHasherInterface $passwordHasher,
-        private EntityManagerInterface $em
+        private readonly UserRepository              $userRepository,
+        private readonly TokenGenerator              $tokenGenerator,
+        private readonly TokenStorage                $tokenStorage,
+        private readonly MailerInterface             $mailer,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly EntityManagerInterface      $em
     ) {
     }
 
@@ -79,14 +79,8 @@ final class AuthService
 
     public function sendResetPasswordEmail(ResetPasswordTokenDto $dto): void
     {
-        $mail = (new TemplatedEmail())
-            ->from()
-            ->to($dto->getUser()->getEmail())
-            ->htmlTemplate('emails.reset_password_email')
-            ->context([
-                'token' => $dto->getToken(),
-            ]);
-
-        $this->mailer->send($mail);
+        $this->mailer->send(
+            ResetPasswordEmail::build($dto->token, $dto->user->getEmail())
+        );
     }
 }
