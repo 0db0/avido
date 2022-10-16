@@ -9,7 +9,7 @@ use App\Dto\Request\UpdatePasswordDto;
 use App\Dto\Request\User\RegisterUserDto;
 use App\Entity\User;
 use App\Service\Auth\AuthService;
-use App\Service\RegistrationService;
+use App\Service\Registration\UserRegistration;
 use App\Service\VerifyEmailService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,9 +20,9 @@ use Symfony\Component\Routing\Annotation\Route;
 final class RegistrationController extends AbstractController
 {
     public function __construct(
-        private readonly RegistrationService $registrationService,
-        private readonly VerifyEmailService  $verifyEmailService,
-        private readonly AuthService         $authService,
+        private readonly UserRegistration   $registrationService,
+        private readonly VerifyEmailService $verifyEmailService,
+        private readonly AuthService        $authService,
     ) {
     }
 

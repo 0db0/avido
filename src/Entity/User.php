@@ -243,7 +243,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): void
     {
         $roles = array_map(static fn (UserRole $v): string => $v->value, $roles);
-        $this->roles = $roles;
+        $this->roles = array_unique($roles);
     }
 
     public function getPassword(): string

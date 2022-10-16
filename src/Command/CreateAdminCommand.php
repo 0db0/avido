@@ -6,7 +6,7 @@ use App\Command\Question\EmailQuestion;
 use App\Command\Question\NameQuestion;
 use App\Command\Question\PasswordQuestion;
 use App\Dto\Request\User\RegisterUserDto;
-use App\Service\RegistrationService;
+use App\Service\Registration\UserRegistration;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,8 +20,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class CreateAdminCommand extends Command
 {
     public function __construct(
-        private readonly RegistrationService $registrationService,
-        string $name = null
+        private readonly UserRegistration $registrationService,
+        string                            $name = null
     ) {
         parent::__construct($name);
     }

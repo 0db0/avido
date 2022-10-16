@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Registration;
 
 use App\Dto\Request\UpdatePasswordDto;
 use App\Dto\Request\User\AbstractCreateUserDto;
 use App\Dto\Request\User\CreateUserDto;
 use App\Dto\Request\User\RegisterUserDto;
+use App\Dto\Request\User\UpdateUserDto;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
@@ -17,7 +18,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class RegistrationService
+class UserRegistration
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
@@ -61,6 +62,21 @@ class RegistrationService
 //        $this->mailer->send();
 
 // todo: send mail to set password.
+        return $user;
+    }
+
+    public function updateUser(User $user, UpdateUserDto $dto): User
+    {
+        switch (true) {
+            case $dto->firstName:                  $user->setFirstname($dto->firstName);
+            case $dto->lastName:                   $user->setLastname($dto->lastName);
+            case $dto->patronymic:                 $user->setLastname($dto->patronymic);
+            case $dto->whenConvenientReceiveCalls: $user->setLastname($dto->whenConvenientReceiveCalls);
+            case $dto->getRole():                  $user->setRoles([$dto->getRole()]);
+        }
+
+        $this->manager->flush();
+
         return $user;
     }
 
@@ -108,6 +124,12 @@ class RegistrationService
     {
         $verification->setVerifiedAt(new \DateTime());
         $verification->getUser()->setStatus(UserStatus::Active);
+        $this->manager->flush();
+    }
+
+    public function delete(User $user): void
+    {
+        $this->manager->remove($user);
         $this->manager->flush();
     }
 

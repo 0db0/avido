@@ -3,17 +3,12 @@
 namespace App\Controller\Api;
 
 use App\Dto\CreateUserDto;
-use App\Service\RegistrationService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use App\Service\Registration\UserRegistration;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
-    public function __construct(private readonly RegistrationService $registrationService)
+    public function __construct(private readonly UserRegistration $registrationService)
     {
     }
 
