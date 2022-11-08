@@ -6,13 +6,13 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 final class SetupPasswordEmail extends TemplatedEmail
 {
-    public static function build(string $url, string $addressee): self
+    public static function build(string $token, string $addressee): self
     {
         return (new self())
             ->to($addressee)
-            ->htmlTemplate('emails.reset_password_email')
+            ->htmlTemplate('emails/setup_password_email.html.twig')
             ->context([
-                'setupPasswordUrl' => $url,
+                'token' => $token,
             ]);
     }
 }

@@ -2,21 +2,23 @@
 
 namespace App\Service\Registration;
 
-use App\Dto\Request\UpdatePasswordDto;
+use App\Dto\Request\Password\SetupPasswordDto;
 use App\Dto\Request\User\AbstractCreateUserDto;
 use App\Dto\Request\User\CreateUserDto;
 use App\Dto\Request\User\RegisterUserDto;
 use App\Dto\Request\User\UpdateUserDto;
 use App\Email\Password\SetupPasswordEmail;
+use App\Email\Verification\VerificationEmail;
 use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
-use App\Message\EmailVerification as VerificationMessage;
+use App\Repository\UserRepository;
+use App\Service\Registration\TokenManager\SetupPasswordTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserRegistration
@@ -25,10 +27,14 @@ class UserRegistration
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly EntityManagerInterface      $manager,
         private readonly MailerInterface             $mailer,
-        private readonly MessageBusInterface         $bus
+        private readonly SetupPasswordTokenManager   $tokenManager,
+        private readonly UserRepository              $userRepository
     ) {
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function registerNewUser(RegisterUserDto $dto): User
     {
         $user = $this->makeNewUser($dto);
@@ -40,9 +46,9 @@ class UserRegistration
         $this->manager->persist($verification);
         $this->manager->flush();
 
-//        $this->mailer->send();
-
-        $this->bus->dispatch(new VerificationMessage($user->getId()));
+        $this->mailer->send(
+            VerificationEmail::build($verification->getCode(), $user->getEmail())
+        );
 
         return $user;
     }
@@ -51,7 +57,7 @@ class UserRegistration
     {
         $user = $this->makeNewUser($dto);
 
-        if ($dto->getRole()) {
+        if ($dto->getRole() !== UserRole::User->value) {
             $user->setRoles([$dto->getRole()]);
         }
 
@@ -60,7 +66,11 @@ class UserRegistration
         $this->manager->persist($user);
         $this->manager->flush();
 
-        $this->mailer->send(SetupPasswordEmail::build());
+        $token = $this->tokenManager->createToken($user);
+
+        $this->mailer->send(
+            SetupPasswordEmail::build($token->tokenId, $user->getEmail())
+        );
 
         return $user;
     }
@@ -113,11 +123,22 @@ class UserRegistration
         return $verification;
     }
 
-    public function updatePassword(User $user, UpdatePasswordDto $dto): void
-    {
-        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
 
+
+    public function setupPassword(SetupPasswordDto $dto): void
+    {
+        $userId = $this->tokenManager->getUserIdByToken($dto->token);
+        $user = $this->userRepository->find($userId);
+
+        if (! $user) {
+//            throw
+        }
+
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
+        $user->setStatus(UserStatus::Active);
         $this->manager->flush();
+
+        $this->tokenManager->deleteToken($dto->token);
     }
 
     public function activateUserByVerification(EmailVerification $verification): void

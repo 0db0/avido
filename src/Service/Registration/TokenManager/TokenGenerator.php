@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Registration\TokenManager;
 
-use App\Dto\Request\PasswordToken\ResetPasswordTokenDto;
+use App\Dto\Request\PasswordToken\SetupPasswordTokenDto;
 use App\Entity\User;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -19,11 +19,11 @@ final class TokenGenerator
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function generateResetToken(User $user): ResetPasswordTokenDto
+    public function generateToken(User $user): SetupPasswordTokenDto
     {
-        $token = Uuid::uuid4()->toString();
+        $tokenId = Uuid::uuid4()->toString();
         $lifetime = $this->params->get('app.reset_password_token.lifetime');
 
-        return new ResetPasswordTokenDto($user, $token, $lifetime);
+        return new SetupPasswordTokenDto($user->getId(), $tokenId, $lifetime);
     }
 }

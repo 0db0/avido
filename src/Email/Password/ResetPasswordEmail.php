@@ -10,7 +10,7 @@ final class ResetPasswordEmail extends TemplatedEmail
     {
         return (new self())
             ->to($addressee)
-            ->htmlTemplate('emails.reset_password_email')
+            ->htmlTemplate('emails.reset_password_email.html.twig')
             ->context([
                 'token' => $token,
             ]);

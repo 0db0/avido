@@ -69,7 +69,7 @@ security:
          - { path: ^/admin, roles: ROLE_ADMIN }
          - { host: ^/moderator, roles: ROLE_MODERATOR }
          - { host: ^api\., path: ^/v1/(login|token/refresh), roles: PUBLIC_ACCESS }
-         - { host: ^api\., roles: IS_AUTHENTICATED_FULLY }
+#         - { host: ^api\., roles: IS_AUTHENTICATED_FULLY }
          - { path: /account, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:

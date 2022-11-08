@@ -2,10 +2,12 @@
 
 namespace App\Service\Auth;
 
-use App\Dto\Request\ForgotPasswordDto;
-use App\Dto\Request\ResetPasswordDto;
-use App\Dto\ResetPasswordTokenDto;
+use App\Dto\Request\Password\ForgotPasswordDto;
+use App\Dto\Request\Password\ResetPasswordDto;
+use App\Dto\Request\Password\UpdatePasswordDto;
+use App\Dto\Request\PasswordToken\ResetPasswordTokenDto;
 use App\Email\Password\ResetPasswordEmail;
+use App\Entity\User;
 use App\Exception\DeletePasswordTokenException;
 use App\Exception\InvalidResetPasswordTokenException;
 use App\Repository\UserRepository;
@@ -82,5 +84,12 @@ final class AuthService
         $this->mailer->send(
             ResetPasswordEmail::build($dto->token, $dto->user->getEmail())
         );
+    }
+
+    public function updatePassword(User $user, UpdatePasswordDto $dto): void
+    {
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
+
+        $this->manager->flush();
     }
 }

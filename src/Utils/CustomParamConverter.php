@@ -34,10 +34,14 @@ class CustomParamConverter implements ParamConverterInterface
                 $reflectionClass = new \ReflectionClass($configuration->getClass());
                 $properties = $reflectionClass->getProperties();
 
-                $payload = match ($request->getContentType()) {
-                    'form' => $request->request->all(),
-                    'json' => $request->toArray(),
-                };
+                if ($request->getMethod() === Request::METHOD_GET) {
+                    $payload = $request->query->all();
+                } else {
+                    $payload = match ($request->getContentType()) {
+                        'form' => $request->request->all(),
+                        'json' => $request->toArray(),
+                    };
+                }
 
                 $arguments = $this->getArguments($properties, $payload);
 

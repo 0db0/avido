@@ -38,8 +38,9 @@ final class CreateAdminCommand extends Command
         $firstname = $io->askQuestion(new NameQuestion('Please, type first name:'));
         $lastname = $io->askQuestion(new NameQuestion('Please, type last name:'));
         $password = $io->askQuestion(new PasswordQuestion('Please, type password:'));
+        $repeatedPassword = $io->askQuestion(new PasswordQuestion('Please, retype password:'));
 
-        $dto = new RegisterUserDto($firstname, $lastname, $email,  $password);
+        $dto = new RegisterUserDto($firstname, $lastname, $email,  $password, $repeatedPassword);
         $this->registrationService->registerNewAdmin($dto);
 
         $io->success('New admin created!');

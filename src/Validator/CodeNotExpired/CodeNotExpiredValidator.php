@@ -10,7 +10,7 @@ class CodeNotExpiredValidator extends ConstraintValidator
 {
     private const VERIFICATION_CODE_PERIOD_EXPIRED = 3600;
 
-    public function __construct(private EmailVerificationRepository $verificationRepository)
+    public function __construct(private readonly EmailVerificationRepository $verificationRepository)
     {
     }
 

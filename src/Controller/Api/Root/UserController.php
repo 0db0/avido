@@ -31,7 +31,7 @@ final class UserController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/user/{id}', name: 'root_create_user', methods: ['PATCH'])]
+    #[Route('/user/{id}', name: 'root_update_user', methods: ['PATCH'])]
     #[ParamConverter('updateUserDto', UpdateUserDto::class)]
     public function update(User $user, UpdateUserDto $updateUserDto): JsonResponse
     {

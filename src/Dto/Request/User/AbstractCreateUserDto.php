@@ -2,7 +2,9 @@
 
 namespace App\Dto\Request\User;
 
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 abstract class AbstractCreateUserDto
 {
@@ -16,6 +18,7 @@ abstract class AbstractCreateUserDto
 
     #[Assert\NotBlank]
     #[Assert\Email]
+//    #[UniqueEntity('email', entityClass: User::class)]
     public readonly string $email;
 
     public function __construct(

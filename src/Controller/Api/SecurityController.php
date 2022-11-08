@@ -3,37 +3,62 @@
 namespace App\Controller\Api;
 
 use App\Dto\CreateUserDto;
+use App\Dto\Request\Password\ForgotPasswordDto;
+use App\Dto\Request\Password\ResetPasswordDto;
+use App\Dto\Request\Password\SetupPasswordDto;
+use App\Dto\Request\Password\UpdatePasswordDto;
+use App\Entity\User;
+use App\Service\Auth\AuthService;
 use App\Service\Registration\UserRegistration;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class SecurityController extends AbstractController
 {
-    public function __construct(private readonly UserRegistration $registrationService)
+    public function __construct(private readonly AuthService $authService)
     {
     }
 
-//    #[Route("/verify", name: "verify_email", methods: ["GET"])]
-//    public function verifyEmail(Request $request): Response
-//    {
-//        $code = $request->get('code');
-//        $result = $this->registrationService->activateUserByVerificationCode($code);
-//
-//        return new JsonResponse(['code' => $request->get('code'), 'status' => $result]);
-//    }
+    #[Route('/password/forgot', name: 'forgot_password', methods: ['POST'])]
+    #[ParamConverter('dto', ForgotPasswordDto::class)]
+    public function forgotPassword(ForgotPasswordDto $dto): JsonResponse
+    {
+        $token = $this->authService->createResetPasswordToken($dto);
+        $this->authService->sendResetPasswordEmail($token);
 
-//    #[Route("/user/{id}/reset-password", name: "reset_password", methods: ['POST'])]
-//    public function resetPassword(): Response
-//    {
-//        return new JsonResponse(['action' => 'reset password']);
-//    }
+        return $this->json(['message' => 'Reset password link was successfully send.']);
+    }
 
-//    #[Route("/login", name: "login", methods: ["GET"])]
-//    public function login()
-//    {
-//
-//    }
+    #[Route("/password/reset", name: "show_reset_password", methods: ['GET'])]
+    public function showResetPassword(): JsonResponse
+    {
+        return $this->json(['message' => 'Show Password Reset Form']);
+    }
 
-    public function logout()
+
+    #[Route("/password/reset", name: "reset_password", methods: ['POST'])]
+    #[ParamConverter('resetPasswordDto', ResetPasswordDto::class)]
+    public function resetPassword(ResetPasswordDto $resetPasswordDto): JsonResponse
+    {
+        $this->authService->resetPassword($resetPasswordDto);
+
+        return $this->json(['message' => 'Password successfully reset']);
+    }
+
+    #[Route("/user/{id}/password/update", name: "update_password", methods: ['POST'])]
+    #[ParamConverter('updatePasswordDto', UpdatePasswordDto::class)]
+    public function updatePassword(User $user, UpdatePasswordDto $updatePasswordDto): Response
+    {
+        $this->authService->updatePassword($user, $updatePasswordDto);
+
+        return $this->json(['message' => 'Password updated successfully']);
+    }
+
+
+    public function logout(): void
     {
     }
 }

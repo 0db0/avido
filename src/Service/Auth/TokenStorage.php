@@ -2,19 +2,17 @@
 
 namespace App\Service\Auth;
 
-use App\Dto\Request\ResetPasswordDto;
-use App\Dto\ResetPasswordTokenDto;
+use App\Dto\Request\Password\ResetPasswordDto;
+use App\Dto\Request\PasswordToken\ResetPasswordTokenDto;
 use App\Entity\User;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class TokenStorage
 {
     public function __construct(
-        private CacheInterface $cache,
-        private ContainerBagInterface $params
+        private readonly CacheInterface $cache
     ) {
     }
 
@@ -30,7 +28,7 @@ class TokenStorage
                 return $item->get();
             }
 
-            $item->expiresAfter($this->params->get('app.reset_password_token.lifetime'));
+            $item->expiresAfter($tokenDto->lifetime);
 
             return $tokenDto->token;
         });

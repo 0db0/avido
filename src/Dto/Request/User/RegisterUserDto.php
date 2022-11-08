@@ -11,13 +11,19 @@ final class RegisterUserDto extends AbstractCreateUserDto
     #[Assert\NotCompromisedPassword]
     public readonly string $password;
 
+    #[Assert\NotBlank]
+    #[Assert\EqualTo(propertyPath: 'password')]
+    private string $repeatedPassword;
+
     public function __construct(
         string $firstName,
         string $lastName,
         string $email,
-        string $password
+        string $password,
+        string $repeatedPassword,
     ) {
-        $this->password  = $password;
+        $this->password         = $password;
+        $this->repeatedPassword = $repeatedPassword;
 
         parent::__construct($firstName, $lastName, $email);
     }
