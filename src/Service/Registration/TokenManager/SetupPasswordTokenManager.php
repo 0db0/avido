@@ -4,6 +4,8 @@ namespace App\Service\Registration\TokenManager;
 
 use App\Dto\Request\PasswordToken\SetupPasswordTokenDto;
 use App\Entity\User;
+use App\Exception\TokenNotFoundException;
+use JsonException;
 use Psr\Cache\InvalidArgumentException;
 
 class SetupPasswordTokenManager
@@ -23,15 +25,14 @@ class SetupPasswordTokenManager
     }
 
     /**
-     * @throws \JsonException
-     * @throws InvalidArgumentException
+     * @throws TokenNotFoundException|InvalidArgumentException|JsonException
      */
     public function getUserIdByToken(string $tokenId): int
     {
         $token = $this->storage->getToken($tokenId);
 
         if (!$token) {
-//            throw TokenNotFoundException
+            throw new TokenNotFoundException();
         }
 
         $payload = json_decode($token, false, 512, JSON_THROW_ON_ERROR);

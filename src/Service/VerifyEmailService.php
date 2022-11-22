@@ -3,8 +3,6 @@
 namespace App\Service;
 
 use App\Entity\EmailVerification;
-use App\Entity\User;
-use App\Exception\ExpiredEmailConformationException;
 use App\Repository\EmailVerificationRepository;
 use Doctrine\ORM\EntityNotFoundException;
 
@@ -32,12 +30,4 @@ class VerifyEmailService
 
         return $verification;
     }
-
-//    private function isCodeExpired(EmailVerification $verification): bool
-//    {
-//        $now = (new \DateTime())->getTimestamp();
-//        $createdAt = $verification->getCreatedAt()->getTimestamp();
-//
-//        return $now - $createdAt > self::VERIFICATION_CODE_PERIOD_EXPIRED;
-//    }
 }

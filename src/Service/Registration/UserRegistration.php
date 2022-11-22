@@ -13,6 +13,7 @@ use App\Entity\EmailVerification;
 use App\Entity\User;
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
+use App\Exception\UserNotFoundException;
 use App\Repository\UserRepository;
 use App\Service\Registration\TokenManager\SetupPasswordTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -123,15 +124,13 @@ class UserRegistration
         return $verification;
     }
 
-
-
     public function setupPassword(SetupPasswordDto $dto): void
     {
         $userId = $this->tokenManager->getUserIdByToken($dto->token);
         $user = $this->userRepository->find($userId);
 
         if (! $user) {
-//            throw
+            throw new UserNotFoundException();
         }
 
         $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));

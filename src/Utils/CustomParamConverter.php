@@ -10,7 +10,6 @@ use ReflectionProperty;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use function PHPUnit\Framework\matches;
 
 class CustomParamConverter implements ParamConverterInterface
 {

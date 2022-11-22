@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Security\CustomAuthenticators;
 
-use Gesdinet\JWTRefreshTokenBundle\Security\Http\Authenticator\RefreshTokenAuthenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -17,12 +15,6 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 final class JWTAuthenticator implements AuthenticatorInterface, AuthenticationEntryPointInterface
 {
     private AuthenticatorInterface $jwtAuthenticator;
-
-    public function __construct(
-//        private readonly AbstractAuthenticator $jwtAuthenticator
-//        private readonly RefreshTokenAuthenticator $jwtAuthenticator
-    ) {
-    }
 
     public function supports(Request $request): ?bool
     {

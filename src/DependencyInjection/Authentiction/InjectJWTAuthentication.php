@@ -14,7 +14,7 @@ final class InjectJWTAuthentication implements CompilerPassInterface
     {
         $baseAuthenticatorRef = new Reference(JWTAuthenticator::class);
 
-        $primaryConnection = $container->getDefinition(CustomAuthenticator::class);
-        $primaryConnection->addMethodCall('setBaseAuthenticator', [$baseAuthenticatorRef]);
+        $customAuthenticator = $container->getDefinition(CustomAuthenticator::class);
+        $customAuthenticator->addMethodCall('setBaseAuthenticator', [$baseAuthenticatorRef]);
     }
 }

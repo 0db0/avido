@@ -15,6 +15,8 @@ use App\Service\TokenGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -90,6 +92,6 @@ final class AuthService
     {
         $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
 
-        $this->manager->flush();
+        $this->em->flush();
     }
 }

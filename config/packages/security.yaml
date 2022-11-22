@@ -16,9 +16,8 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-#
+
         login:
-#          host: ^api\.
           pattern: ^/v1/login
           stateless: true
           provider: app_user_provider
