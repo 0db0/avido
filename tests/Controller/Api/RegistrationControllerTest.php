@@ -16,17 +16,21 @@ class RegistrationControllerTest extends AbstractWebTest
      */
     public function testRegisterNewUser(): void
     {
+        $password = $this->faker->password;
         $payload = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'email'      => $this->faker->email,
+            'first_name'        => $this->faker->firstName,
+            'last_name'         => $this->faker->lastName,
+            'email'             => $this->faker->email,
+
         ];
 
         $this->client->jsonRequest(
             Request::METHOD_POST,
-            $this->generateUrl('api_register', array_merge($payload, [
-                'password'   => 'Secret_Password12@',
-            ]))
+            $this->generateUrl('api_register'),
+            array_merge($payload, [
+                'password'          => $password,
+                'repeated_password' => $password,
+            ])
         );
 
         $response = $this->client->getResponse();

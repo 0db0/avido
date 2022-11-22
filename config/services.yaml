@@ -37,6 +37,10 @@ services:
     App\Security\CustomAuthenticators\AuthenticationSuccessHandler:
         class: App\Security\CustomAuthenticators\AuthenticationSuccessHandler
 
+    App\DataFixtures\Providers\HashPasswordProvider:
+        tags: [{name: nelmio_alice.faker.provider}]
+#    App\DataFixtures\Providers\UserStatusProvider:
+#        tags: [{name: nelmio_alice.faker.provider}]
 
 # for custom auth
 #    Lexik\Bundle\JWTAuthenticationBundle\Security\Authenticator\JWTAuthenticator:

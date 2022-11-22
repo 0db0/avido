@@ -1,0 +1,15 @@
+App\Entity\User:
+  user{1..10}:
+    email (unique): <email()>
+    firstname: <firstName()>
+    lastname: <lastName()>
+    phone_number (unique): <e164PhoneNumber()>
+    when_convenient_receive_calls: <words(15, true)>
+    password: <hashPassword('password')>
+    status: !php/const App\Enum\UserStatus::Active
+
+
+
+
+
+

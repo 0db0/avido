@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Enum\UserStatus;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -31,6 +32,7 @@ class UserFixtures extends BaseFixtures implements FixtureGroupInterface
             $user->setPhoneNumber((string) $this->faker->unique()->randomNumber());
             $user->setWhenConvenientReceiveCalls($this->faker->words(15, true));
             $user->setPassword($this->passwordHasher->hashPassword($user, self::PLAIN_PASSWORD));
+            $user->setStatus(UserStatus::Active);
 
             $manager->persist($user);
 

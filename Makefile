@@ -15,6 +15,9 @@ stop:
 down:
 	docker-compose down --remove-orphans
 
+init:
+	docker-compose exec db psql -U developer -c 'CREATE IF NOT EXISTS avido_test'
+
 ps:
 	docker-compose ps
 

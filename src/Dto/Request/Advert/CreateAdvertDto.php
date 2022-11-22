@@ -12,7 +12,7 @@ final class CreateAdvertDto
     public readonly int $cost;
     #[Mapped('name')]
     public readonly Category $category;
-    #[Mapped('name')]
+    #[Mapped('slug')]
     public readonly City $city;
     public readonly string $description;
 

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller\Api;
 
+use App\Enum\UserStatus;
 use App\Tests\AbstractWebTest;
 use Exception;
 use JsonException;
@@ -17,16 +18,17 @@ class AdvertTest extends AbstractWebTest
     public function testCreateNew201(): void
     {
         $payload = [
-            'first_name' => $this->faker->firstName,
-            'last_name'  => $this->faker->lastName,
-            'email'      => $this->faker->email,
+            'name'        => $this->faker->words(asText: true),
+            'cost'        => $this->faker->randomNumber(),
+            'description' => $this->faker->words(asText: true),
+            'city'        => 'saratov',
+            'category'    => 'auto',
         ];
 
         $this->client->jsonRequest(
             Request::METHOD_POST,
-            $this->generateUrl('api_register', array_merge($payload, [
-                'password'   => 'Secret_Password12@',
-            ]))
+            $this->generateUrl('api_create_advert'),
+            $payload
         );
 
         $response = $this->client->getResponse();

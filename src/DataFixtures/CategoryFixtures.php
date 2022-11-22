@@ -14,7 +14,7 @@ class CategoryFixtures extends BaseFixtures
     {
         for ($i = 0; $i < self::COUNT_FIXTURES; $i++) {
             $category = new Category();
-            $category->setName($this->faker->word);
+            $category->setName($this->getCategoryNames()[$i] ?? $this->faker->word);
             $category->setDescription($this->faker->words(rand(10, 30), asText: true));
             $category->setUrlCode($this->faker->md5);
             $category->setParentId($i - 1);
@@ -24,5 +24,16 @@ class CategoryFixtures extends BaseFixtures
         }
 
         $manager->flush();
+    }
+
+    private function getCategoryNames(): array
+    {
+        return [
+            'auto',
+            'estate',
+            'electronics',
+            'mobile',
+            'computers',
+        ];
     }
 }
