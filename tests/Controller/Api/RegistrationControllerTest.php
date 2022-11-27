@@ -16,11 +16,11 @@ class RegistrationControllerTest extends AbstractWebTest
      */
     public function testRegisterNewUser(): void
     {
-        $password = $this->faker->password;
+        $password = $this->faker->password();
         $payload = [
-            'first_name'        => $this->faker->firstName,
-            'last_name'         => $this->faker->lastName,
-            'email'             => $this->faker->email,
+            'first_name'        => $this->faker->firstName(),
+            'last_name'         => $this->faker->lastName(),
+            'email'             => $this->faker->email(),
 
         ];
 
