@@ -1,0 +1,10 @@
+#App\Entity\Category:
+#  parent_category{1..5}:
+#    name (unique): <word()>
+#    url_code (unique): <slug()>
+#    parent_id: 0
+#
+#  child_category{1..5}:
+#    name (unique): <word()>
+#    url_code (unique): <slug()>
+#    parent_id: '@parent_category1->id'

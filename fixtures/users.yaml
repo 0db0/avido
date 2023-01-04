@@ -1,12 +1,20 @@
 App\Entity\User:
-  user{1..10}:
+  base_user (template):
     email (unique): <email()>
     firstname: <firstName()>
     lastname: <lastName()>
     phone_number (unique): <e164PhoneNumber()>
     when_convenient_receive_calls: <words(15, true)>
     password: <hashPassword('password')>
+
+  awaiting_email_activation_user{1..2} (extends base_user):
+    status: !php/const App\Enum\UserStatus::Awaiting_email_activation
+
+  active_user{1..5} (extends base_user):
     status: !php/const App\Enum\UserStatus::Active
+
+  blocked_user{1..3} (extends base_user):
+    status: !php/const App\Enum\UserStatus::Blocked
 
 
 

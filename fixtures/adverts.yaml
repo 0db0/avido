@@ -1,0 +1,3 @@
+#App\Entity\Advert:
+#  advert{0..10}:
+
