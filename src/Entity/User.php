@@ -19,10 +19,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const STATUS_AWAITING_EMAIL_ACTIVATION = 0;
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_BLOCKED = 2;
-
     /**
      * @ORM\Id()
      * @ORM\Column(type="integer")
