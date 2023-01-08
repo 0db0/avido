@@ -30,7 +30,7 @@ final class AdvertController extends AbstractController
         $advert = $this->advertService->create($createDto, $this->getUser());
 
         return $this->json([
-            'message' => 'Advert successfully fetched.',
+            'message' => 'Advert successfully created.',
             'data'    => $advert->toArray(),
         ], Response::HTTP_CREATED);
     }
@@ -51,7 +51,7 @@ final class AdvertController extends AbstractController
     public function update(Advert $advert, UpdateAdvertDto $updateDto): JsonResponse
     {
         $this->denyAccessUnlessGranted(AdvertPermissions::EDIT, $advert);
-        $updatedAdvert = $this->advertService->update($updateDto, $this->getUser(), $advert);
+        $updatedAdvert = $this->advertService->update($updateDto, $advert);
 
         return $this->json([
             'message' => 'Advert updated.',

@@ -14,12 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Advert
 {
-    public const STATUS_DRAFT      = 0;
-    public const STATUS_MODERATION = 1;
-    public const STATUS_REJECTED   = 2;
-    public const STATUS_DONE       = 3;
-    public const STATUS_ACTIVE     = 4;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -52,7 +46,7 @@ class Advert
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private \DateTime $publishAt;
+    private \DateTime $publishedAt;
 
     /**
      * @ORM\Column(type="bigint", options={"unsigned"=true})
@@ -141,14 +135,14 @@ class Advert
         $this->description = $description;
     }
 
-    public function getPublishAt(): \DateTime
+    public function getPublishedAt(): \DateTime
     {
-        return $this->publishAt;
+        return $this->publisedhAt;
     }
 
-    public function setPublishAt(\DateTime $publishAt): void
+    public function setPublishedAt(\DateTime $publishedAt): void
     {
-        $this->publishAt = $publishAt;
+        $this->publishedAt = $publishedAt;
     }
 
     public function getCost(): int
@@ -220,7 +214,7 @@ class Advert
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(): void
+    public function refreshUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();
     }

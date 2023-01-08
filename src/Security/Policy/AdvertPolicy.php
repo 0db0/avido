@@ -22,6 +22,13 @@ final class AdvertPolicy
             return false;
         }
 
+        if (
+            $this->security->isGranted(UserRole::Admin->value)
+            || $this->security->isGranted(UserRole::Moderator->value)
+        ) {
+            return false;
+        }
+
         return $this->security->isGranted(UserRole::User->value);
     }
 
@@ -53,7 +60,7 @@ final class AdvertPolicy
              return false;
          }
 
-         return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
+         return in_array($advert->getStatus(), [AdvertStatus::Draft, AdvertStatus::Rejected], true);
     }
 
     public function canPushToModeration(User $user, Advert $advert): bool
@@ -66,6 +73,6 @@ final class AdvertPolicy
             return false;
         }
 
-        return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
+        return in_array($advert->getStatus(), [AdvertStatus::Draft, AdvertStatus::Rejected], true);
     }
 }

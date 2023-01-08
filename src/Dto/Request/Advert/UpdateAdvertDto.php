@@ -1,32 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Request\Advert;
 
 use App\Entity\Category;
 use App\Entity\City;
 use App\Utils\Attributes\Mapped;
+use Symfony\Component\Validator\Constraints as Assert;
 
 final class UpdateAdvertDto
 {
-    public readonly string $name;
-    public readonly int $cost;
+    #[Assert\Length(min: 3, max: 255)]
+    public readonly string|null $name;
+
     #[Mapped('name')]
-    public readonly Category $category;
-    #[Mapped('name')]
-    public readonly City $city;
-    public readonly string $description;
+    public readonly Category|null $category;
+
+    #[Mapped('slug')]
+    public readonly City|null $city;
+
+    #[Assert\Length(min: 3, max: 10000)]
+    public readonly string|null $description;
+
+    #[Assert\PositiveOrZero]
+    public readonly int|null $cost;
+
 
     public function __construct(
-        string $name,
-        Category $category,
-        City $city,
-        string $description,
-        int $cost,
+        ?string $name,
+        ?Category $category,
+        ?City $city,
+        ?string $description,
+        ?int $cost,
     ) {
+        $this->name        = $name;
+        $this->category    = $category;
+        $this->city        = $city;
         $this->description = $description;
-        $this->city = $city;
-        $this->category = $category;
-        $this->cost = $cost;
-        $this->name = $name;
+        $this->cost        = $cost;
     }
 }

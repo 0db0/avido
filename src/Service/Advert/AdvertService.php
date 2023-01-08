@@ -32,7 +32,7 @@ final class AdvertService
         $advert->setCity($dto->city);
         $advert->setDescription($dto->description);
         $advert->setCost($dto->cost);
-        $advert->setStatus(AdvertStatus::draft);
+        $advert->setStatus(AdvertStatus::Draft);
         $advert->setSeller($user);
 
         $this->em->persist($advert);
@@ -41,14 +41,13 @@ final class AdvertService
         return $advert;
     }
 
-    public function update(UpdateAdvertDto $dto, User $user, Advert $advert): Advert
+    public function update(UpdateAdvertDto $dto, Advert $advert): Advert
     {
         $advert->setName($dto->name);
         $advert->setCategory($dto->category);
         $advert->setCity($dto->city);
         $advert->setDescription($dto->description);
         $advert->setCost($dto->cost);
-        $advert->setSeller($user);
 
         $this->em->flush();
 
@@ -62,7 +61,7 @@ final class AdvertService
      */
     public function moveToModeration(Advert $advert): void
     {
-        $advert->setStatus(AdvertStatus::moderation);
+        $advert->setStatus(AdvertStatus::Moderation);
         $this->em->flush();
 
         $addressee = $this->params->get('app.moderation.email');

@@ -1,3 +1,27 @@
-#App\Entity\Advert:
-#  advert{0..10}:
+parameters:
+  advert_draft: !php/const App\Enum\AdvertStatus::Draft
+  advert_moderation: !php/const App\Enum\AdvertStatus::Moderation
+  advert_rejected: !php/const App\Enum\AdvertStatus::Rejected
+  advert_active: !php/const App\Enum\AdvertStatus::Active
+  advert_done: !php/const App\Enum\AdvertStatus::Done
 
+App\Entity\Advert:
+  base_advert (template):
+    name: <sentence()>
+    category: '@child_category<numberBetween(1, 5)>'
+    city: '@city<numberBetween(1, 10)>'
+    cost: <randomNumber(5, true)>
+    description: <paragraph()>
+    count_views: <randomNumber(3)>
+
+  draft_advert (extends base_advert):
+    status: <{advert_draft}>
+  moderation_advert (extends base_advert):
+    status: <{advert_moderation}>
+  rejected_advert (extends base_advert):
+    status: <{advert_rejected}>
+  active_advert (extends base_advert):
+    status: <{advert_active}>
+    publishedAt: <dateTime()>
+  done_advert (extends base_advert):
+    status: <{advert_done}>
