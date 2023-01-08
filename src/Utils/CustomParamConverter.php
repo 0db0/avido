@@ -10,6 +10,7 @@ use ReflectionProperty;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
+use TypeError;
 
 class CustomParamConverter implements ParamConverterInterface
 {
@@ -46,9 +47,11 @@ class CustomParamConverter implements ParamConverterInterface
 
                 try {
                     $objectDto = $reflectionClass->newInstance(...$arguments);
-                } catch (ReflectionException $e) {
+                } catch (ReflectionException|TypeError $e) {
 //                    todo: loggin exception
-                    return false;
+                    $message = $this->validator->prepareMessageFromException($e, $arguments);
+
+                    throw new ConstraintViolationException($message);
                 }
 
                 $errors = $this->validator->validate($objectDto);
