@@ -39,7 +39,7 @@ class RegistrationControllerTest extends AbstractWebTest
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
         $this->assertArraySubset(['data' => $payload], $content);
 
-        $newUser = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $payload['email']]);
+        $newUser = $this->em->getRepository(User::class)->findOneBy(['email' => $payload['email']]);
         $this->assertArraySubset($payload, $newUser->toArray());
     }
 }
