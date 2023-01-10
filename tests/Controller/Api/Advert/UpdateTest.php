@@ -33,18 +33,17 @@ class UpdateTest extends AbstractWebTest
     }
 
     /**
+     * @dataProvider dataProviderValidUpdateStatus
+     *
      * @throws JsonException
      * @throws Exception
      */
-    public function testUpdateOk(): void
+    public function testUpdateOk(AdvertStatus $status): void
     {
         $city = $this->cityRepository->findOneBy([]);
         $category = $this->categoryRepository->findOneBy([]);
         $user = $this->userRepository->findOneBy(['status' => UserStatus::Active]);
-
-//        $advert = $this->advertRepository->findOneBy(['seller' => $user]);
-        $advert = $this->advertRepository->findAll();
-        dd($advert);
+        $advert = $this->advertRepository->findOneBy(['author' => $user, 'status' => $status]);
 
         $payload = [
             'name'        => $this->faker->words(asText: true),
@@ -62,18 +61,16 @@ class UpdateTest extends AbstractWebTest
             );
 
         $response = $this->client->getResponse();
+
         $content = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $expected = array_merge($payload, [
             'city'      => $city->getName(),
             'category'  => $category->getName(),
-            'seller_id' => $user->getId(),
+            'author_id' => $user->getId(),
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertArraySubset(['data' => $expected], $content);
-
-        $newAdvert = $this->advertRepository->find($content['data']['id']);
-        $this->assertEquals(AdvertStatus::Draft, $newAdvert->getStatus());
     }
 
     /**
@@ -106,11 +103,11 @@ class UpdateTest extends AbstractWebTest
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
-    public function dataProviderNonUserRoles(): array
+    public function dataProviderValidUpdateStatus(): array
     {
         return [
-            [UserRole::Admin],
-            [UserRole::Moderator],
+            [AdvertStatus::Draft],
+            [AdvertStatus::Rejected],
         ];
     }
 }

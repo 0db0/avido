@@ -17,7 +17,7 @@ class AdvertFixtures extends BaseFixtures implements DependentFixtureInterface
             $advert = new Advert();
             $advert->setName($this->faker->words(asText: true));
             $advert->setDescription($this->faker->words(20, asText: true));
-            $advert->setSeller($this->getReference(UserFixtures::USER_REFERENCE . $i));
+            $advert->setAuthor($this->getReference(UserFixtures::USER_REFERENCE . $i));
             $advert->setStatus($this->faker->randomElement(AdvertStatus::cases()));
             $advert->setCost($this->faker->randomNumber());
             $advert->setCountViews($this->faker->numberBetween(9, 99));

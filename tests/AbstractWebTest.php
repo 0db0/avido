@@ -3,12 +3,10 @@
 namespace App\Tests;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Generator;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

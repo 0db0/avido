@@ -26,6 +26,7 @@ class CreateTest extends AbstractWebTest
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->cityRepository = $this->em->getRepository(City::class);
         $this->categoryRepository = $this->em->getRepository(Category::class);
         $this->advertRepository = $this->em->getRepository(Advert::class);
@@ -62,7 +63,7 @@ class CreateTest extends AbstractWebTest
         $expected = array_merge($payload, [
             'city'      => $city->getName(),
             'category'  => $category->getName(),
-            'seller_id' => $user->getId(),
+            'author_id' => $user->getId(),
         ]);
 
         $this->assertResponseStatusCodeSame(Response::HTTP_CREATED);

@@ -47,7 +47,7 @@ final class AdvertPolicy
             return true;
         }
 
-        return $advert->getSeller()->getId() === $user->getId();
+        return $advert->getAuthor()->getId() === $user->getId();
     }
 
     public function canEdit(User $user, Advert $advert): bool
@@ -56,7 +56,7 @@ final class AdvertPolicy
              return false;
          }
 
-         if ($advert->getSeller()->getId() !== $user->getId()) {
+         if ($advert->getAuthor()->getId() !== $user->getId()) {
              return false;
          }
 
@@ -69,7 +69,7 @@ final class AdvertPolicy
             return false;
         }
 
-        if ($advert->getSeller()->getId() !== $user->getId()) {
+        if ($advert->getAuthor()->getId() !== $user->getId()) {
             return false;
         }
 

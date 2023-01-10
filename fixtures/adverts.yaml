@@ -13,13 +13,16 @@ App\Entity\Advert:
     cost: <randomNumber(5, true)>
     description: <paragraph()>
     count_views: <randomNumber(3)>
+    author: '@active_user*'
 
   draft_advert (extends base_advert):
     status: <{advert_draft}>
+    author: '@active_user1'
   moderation_advert (extends base_advert):
     status: <{advert_moderation}>
   rejected_advert (extends base_advert):
     status: <{advert_rejected}>
+    author: '@active_user1'
   active_advert (extends base_advert):
     status: <{advert_active}>
     publishedAt: <dateTime()>

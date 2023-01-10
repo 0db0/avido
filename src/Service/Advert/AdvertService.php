@@ -33,7 +33,7 @@ final class AdvertService
         $advert->setDescription($dto->description);
         $advert->setCost($dto->cost);
         $advert->setStatus(AdvertStatus::Draft);
-        $advert->setSeller($user);
+        $advert->setAuthor($user);
 
         $this->em->persist($advert);
         $this->em->flush();
