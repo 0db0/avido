@@ -57,4 +57,28 @@ class ModerationTest extends AbstractWebTest
         self::assertQueuedEmailCount(1);
         self::assertEmailAddressContains($mail, 'To', $expectedAddress);
     }
+
+    /**
+     * @dataProvider dataProviderInvalidStatuses
+     */
+    public function testUserPushToModeration403(AdvertStatus $status): void
+    {
+        $user = $this->userRepository->findOneBy(['status' => UserStatus::Active]);
+        $advert = $this->advertRepository->findOneBy(['author' => $user, 'status' => $status]);
+
+        $this->client->loginUser($user)
+            ->jsonRequest(
+                Request::METHOD_POST,
+                $this->generateUrl('api_push_to_moderation_advert', ['id' => $advert->getId()])
+            );
+
+        self::assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function dataProviderInvalidStatuses(): iterable
+    {
+        yield [AdvertStatus::Moderation];
+        yield [AdvertStatus::Active];
+        yield [AdvertStatus::Done];
+    }
 }
