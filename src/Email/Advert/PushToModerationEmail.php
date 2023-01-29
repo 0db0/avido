@@ -11,7 +11,7 @@ final class PushToModerationEmail extends TemplatedEmail
     {
         return (new self())
             ->to($addressee)
-            ->htmlTemplate('emails.advert.push_to_moderation.html.twig')
+            ->htmlTemplate('emails/advert/push_to_moderation.html.twig')
             ->context([
                 'author' => $advert->getAuthor(),
                 'advert' => $advert,

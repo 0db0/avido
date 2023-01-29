@@ -67,7 +67,7 @@ final class AdvertController extends AbstractController
         return $this->json([], Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/adverts/{id}', name: 'push_to_moderation_advert', methods: ['POST'])]
+    #[Route('/adverts/{id}/moderation', name: 'push_to_moderation_advert', methods: ['POST'])]
     public function pushToModeration(Advert $advert): JsonResponse
     {
         $this->denyAccessUnlessGranted(AdvertPermissions::PUSH_TO_MODERATION, $advert);

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -79,12 +81,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $createdAt;
+    private CarbonInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $updatedAt;
+    private CarbonInterface $updatedAt;
 
     /**
      * @ORM\Column(type="boolean")
@@ -188,7 +190,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->status = $status->value;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): CarbonInterface
     {
         return $this->createdAt;
     }
@@ -206,10 +208,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setInitialTime(): void
     {
-        $this->createdAt = $this->updatedAt = new \DateTime();
+        $this->createdAt = $this->updatedAt = Carbon::now();
     }
 
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): CarbonInterface
     {
         return $this->updatedAt;
     }
@@ -219,7 +221,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function refreshUpdatedAt(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = Carbon::now();
     }
 
     public function getRoles(): array
@@ -296,7 +298,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'last_name'  => $this->lastname,
             'email'      => $this->email,
             'status'     => $this->status,
-            'created_at' => $this->createdAt,
+            'created_at' => $this->createdAt->toIso8601ZuluString(),
         ];
     }
 }

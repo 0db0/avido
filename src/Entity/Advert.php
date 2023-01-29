@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Enum\AdvertStatus;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,7 +48,7 @@ class Advert
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private \DateTime $publishedAt;
+    private CarbonInterface $publishedAt;
 
     /**
      * @ORM\Column(type="bigint", options={"unsigned"=true})
@@ -77,12 +79,12 @@ class Advert
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $createdAt;
+    private CarbonInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTime $updatedAt;
+    private CarbonInterface $updatedAt;
 
     public function __construct()
     {
@@ -135,14 +137,14 @@ class Advert
         $this->description = $description;
     }
 
-    public function getPublishedAt(): \DateTime
+    public function getPublishedAt(): CarbonInterface
     {
-        return $this->publisedhAt;
+        return $this->publishedAt;
     }
 
     public function setPublishedAt(\DateTime $publishedAt): void
     {
-        $this->publishedAt = $publishedAt;
+        $this->publishedAt = Carbon::createFromTimestamp($publishedAt->getTimestamp());
     }
 
     public function getCost(): int
@@ -198,7 +200,7 @@ class Advert
         $this->status = $status->value;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): CarbonInterface
     {
         return $this->createdAt;
     }
@@ -208,7 +210,7 @@ class Advert
      */
     public function setInitialTime(): void
     {
-        $this->createdAt = $this->updatedAt = new \DateTime();
+        $this->createdAt = $this->updatedAt = Carbon::now();
     }
 
     /**
@@ -216,7 +218,7 @@ class Advert
      */
     public function refreshUpdatedAt(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = Carbon::now();
     }
 
     public function toArray(): array
@@ -231,8 +233,8 @@ class Advert
             'description' => $this->description,
             'cost'        => $this->cost,
             'count_views' => $this->countViews,
-            'created_at'  => $this->createdAt,
-            'updated_at'  => $this->updatedAt,
+            'created_at'  => $this->createdAt->toIso8601ZuluString(),
+            'updated_at'  => $this->updatedAt->toIso8601ZuluString(),
         ];
     }
 }
