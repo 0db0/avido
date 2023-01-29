@@ -2,23 +2,24 @@
 
 namespace App\Dto\Request\Advert;
 
+use App\Dto\Request\RequestDtoInterface;
 use App\Entity\Category;
 use App\Entity\City;
-use App\Utils\Attributes\Mapped;
+use App\Utils\Attributes\QueryBy;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class CreateAdvertDto
+final class CreateAdvertDto implements RequestDtoInterface
 {
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 255)]
     public readonly string $name;
 
     #[Assert\NotBlank]
-    #[Mapped('name')]
+    #[QueryBy('name')]
     public readonly Category $category;
 
     #[Assert\NotBlank]
-    #[Mapped('slug')]
+    #[QueryBy('slug')]
     public readonly City $city;
 
     #[Assert\NotBlank]

@@ -39,10 +39,10 @@ final class AuthService
      */
     public function resetPassword(ResetPasswordDto $dto): void
     {
-        $user = $this->userRepository->findOneBy(['email' => $dto->getEmail()]);
+        $user = $this->userRepository->findOneBy(['email' => $dto->email]);
 
         if (! $user) {
-            throw new EntityNotFoundException(sprintf('User with email %s not found', $dto->getEmail()));
+            throw new EntityNotFoundException(sprintf('User with email %s not found', $dto->email));
         }
 
         if (! $this->tokenStorage->isTokenValid($dto, $user)) {
@@ -51,7 +51,7 @@ final class AuthService
 
         $this->em->beginTransaction();
 
-        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
         $this->em->flush();
 
         $isRemoveSuccessful = $this->tokenStorage->purgeToken($user);
@@ -65,14 +65,13 @@ final class AuthService
 
     /**
      * @throws EntityNotFoundException
-     * @throws InvalidArgumentException
      */
     public function createResetPasswordToken(ForgotPasswordDto $dto): ResetPasswordTokenDto
     {
-        $user = $this->userRepository->findOneBy(['email' => $dto->getEmail()]);
+        $user = $this->userRepository->findOneBy(['email' => $dto->email]);
 
         if (!$user) {
-            throw new EntityNotFoundException(sprintf('User with email %s not found', $dto->getEmail()));
+            throw new EntityNotFoundException(sprintf('User with email %s not found', $dto->email));
         }
 
         $token = $this->tokenGenerator->generateResetToken($user);
@@ -90,7 +89,7 @@ final class AuthService
 
     public function updatePassword(User $user, UpdatePasswordDto $dto): void
     {
-        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->getPassword()));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
 
         $this->em->flush();
     }

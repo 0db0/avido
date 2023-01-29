@@ -2,18 +2,17 @@
 
 namespace App\Dto\Request\Password;
 
+use App\Dto\Request\RequestDtoInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class ForgotPasswordDto
+final class ForgotPasswordDto implements RequestDtoInterface
 {
-    public function __construct(private string $email)
-    {
-    }
-
     #[Assert\NotBlank]
     #[Assert\Email]
-    public function getEmail(): string
+    public readonly string $email;
+
+    public function __construct(string $email)
     {
-        return $this->email;
+        $this->email = $email;
     }
 }

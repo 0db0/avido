@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace App\Dto\Request\Advert;
 
+use App\Dto\Request\RequestDtoInterface;
 use App\Entity\Category;
 use App\Entity\City;
-use App\Utils\Attributes\Mapped;
+use App\Utils\Attributes\QueryBy;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class UpdateAdvertDto
+final class UpdateAdvertDto implements RequestDtoInterface
 {
     #[Assert\Length(min: 3, max: 255)]
     public readonly string|null $name;
 
-    #[Mapped('name')]
+    #[QueryBy('name')]
     public readonly Category|null $category;
 
-    #[Mapped('slug')]
+    #[QueryBy('slug')]
     public readonly City|null $city;
 
     #[Assert\Length(min: 3, max: 10000)]
@@ -25,7 +26,6 @@ final class UpdateAdvertDto
 
     #[Assert\PositiveOrZero]
     public readonly int|null $cost;
-
 
     public function __construct(
         ?string $name,

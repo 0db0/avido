@@ -46,7 +46,7 @@ class TokenStorage
             return false;
         }
 
-        return $token === $dto->getToken();
+        return $token === $dto->token;
     }
 
     /**

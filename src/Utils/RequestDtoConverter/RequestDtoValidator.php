@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Utils;
+namespace App\Utils\RequestDtoConverter;
 
 use ReflectionException;
 use Symfony\Component\Validator\ConstraintViolationInterface;

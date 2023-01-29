@@ -7,10 +7,10 @@ use App\Entity\Category;
 use App\Entity\City;
 use App\Entity\User;
 use App\Enum\AdvertStatus;
-use App\Enum\UserRole;
 use App\Enum\UserStatus;
 use App\Tests\AbstractWebTest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Exception;
 use JsonException;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,31 +74,49 @@ class UpdateTest extends AbstractWebTest
     }
 
     /**
-     * @dataProvider dataProviderNonUserRoles
+     * @dataProvider dataProviderInValidUpdateStatus
      */
-    public function testCreateByNonUserRole403(UserRole $role): void
+    public function testUpdateWhenAdvertInInvalidStatus403(AdvertStatus $status): void
     {
-        $user = $this->userRepository->findOneBy(['status' => UserStatus::Active]);
-        $user->setRoles([$role]);
-        $this->em->flush();
-
-        $city = $this->cityRepository->findOneBy([]);
-        $category = $this->categoryRepository->findOneBy([]);
+        $advert = $this->advertRepository->findOneBy(['status' => $status]);
 
         $payload = [
             'name'        => $this->faker->words(asText: true),
             'cost'        => $this->faker->randomNumber(),
             'description' => $this->faker->words(asText: true),
-            'city'        => $city->getSlug(),
-            'category'    => $category->getName(),
         ];
 
-        $this->client->loginUser($user)
+        $this->client->loginUser($advert->getAuthor())
             ->jsonRequest(
-                Request::METHOD_POST,
-                $this->generateUrl('api_create_advert'),
+                Request::METHOD_PUT,
+                $this->generateUrl('api_edit_advert', ['id' => $advert->getId()]),
                 $payload
             );
+
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
+    }
+
+    public function testUpdateNonAdvertOwner403(): void
+    {
+        $advert = $this->advertRepository->findOneBy(['status' => AdvertStatus::Draft]);
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->neq('id', $advert->getAuthor()->getId()));
+        $nonOwner = $this->userRepository->matching($criteria)->first();
+
+        $payload = [
+            'name'        => $this->faker->words(asText: true),
+            'cost'        => $this->faker->randomNumber(),
+            'description' => $this->faker->words(asText: true),
+        ];
+
+        $this->client->loginUser($nonOwner)
+            ->jsonRequest(
+                Request::METHOD_PUT,
+                $this->generateUrl('api_edit_advert', ['id' => $advert->getId()]),
+                $payload
+            );
+
 
         $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
@@ -108,6 +126,14 @@ class UpdateTest extends AbstractWebTest
         return [
             [AdvertStatus::Draft],
             [AdvertStatus::Rejected],
+        ];
+    }
+
+    public function dataProviderInValidUpdateStatus(): array
+    {
+        return [
+            [AdvertStatus::Active],
+            [AdvertStatus::Moderation],
         ];
     }
 }
