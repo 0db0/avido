@@ -13,7 +13,7 @@ final class PushToModerationEmail extends TemplatedEmail
             ->to($addressee)
             ->htmlTemplate('emails.advert.push_to_moderation.html.twig')
             ->context([
-                'author' => $advert->getSeller(),
+                'author' => $advert->getAuthor(),
                 'advert' => $advert,
             ]);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,29 +17,29 @@ class Region
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $updatedAt;
+    private DateTime $updatedAt;
 
     /**
      * @ORM\PrePersist()
      */
     public function setInitialTime(): void
     {
-        $this->createdAt = $this->updatedAt = new \DateTime();
+        $this->createdAt = $this->updatedAt = new DateTime();
     }
 
     /**
@@ -46,6 +47,11 @@ class Region
      */
     public function setUpdatedAt(): void
     {
-        $this->updatedAt = new \DateTime();
+        $this->updatedAt = new DateTime();
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
     }
 }

@@ -4,9 +4,9 @@ namespace App\Enum;
 
 enum AdvertStatus: int
 {
-    case draft      = 0;
-    case moderation = 1;
-    case rejected   = 2;
-    case active     = 3;
-    case done       = 4;
+    case Draft      = 0;
+    case Moderation = 1;
+    case Rejected   = 2;
+    case Active     = 3;
+    case Done       = 4;
 }

@@ -22,6 +22,13 @@ final class AdvertPolicy
             return false;
         }
 
+        if (
+            $this->security->isGranted(UserRole::Admin->value)
+            || $this->security->isGranted(UserRole::Moderator->value)
+        ) {
+            return false;
+        }
+
         return $this->security->isGranted(UserRole::User->value);
     }
 
@@ -40,7 +47,7 @@ final class AdvertPolicy
             return true;
         }
 
-        return $advert->getSeller()->getId() === $user->getId();
+        return $advert->getAuthor()->getId() === $user->getId();
     }
 
     public function canEdit(User $user, Advert $advert): bool
@@ -49,11 +56,11 @@ final class AdvertPolicy
              return false;
          }
 
-         if ($advert->getSeller()->getId() !== $user->getId()) {
+         if ($advert->getAuthor()->getId() !== $user->getId()) {
              return false;
          }
 
-         return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
+         return in_array($advert->getStatus(), [AdvertStatus::Draft, AdvertStatus::Rejected], true);
     }
 
     public function canPushToModeration(User $user, Advert $advert): bool
@@ -62,10 +69,10 @@ final class AdvertPolicy
             return false;
         }
 
-        if ($advert->getSeller()->getId() !== $user->getId()) {
+        if ($advert->getAuthor()->getId() !== $user->getId()) {
             return false;
         }
 
-        return in_array($advert->getStatus(), [AdvertStatus::draft, AdvertStatus::rejected], true);
+        return in_array($advert->getStatus(), [AdvertStatus::Draft, AdvertStatus::Rejected], true);
     }
 }

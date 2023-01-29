@@ -2,10 +2,11 @@
 
 namespace App\Dto\Request\Password;
 
+use App\Dto\Request\RequestDtoInterface;
 use App\Validator\TokenExists as CustomAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class SetupPasswordDto
+final class SetupPasswordDto implements RequestDtoInterface
 {
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]

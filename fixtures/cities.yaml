@@ -1,0 +1,5 @@
+App\Entity\City:
+  city{1..10}:
+    name (unique): <city()>
+    slug (unique): <citySuffix()>
+    region: '@region<numberBetween(1, 30)>'

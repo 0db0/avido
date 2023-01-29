@@ -5,7 +5,7 @@ namespace App\Dto\Request;
 use App\Validator\CodeNotExpired as CustomAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class EmailVerifyDto
+final class EmailVerifyDto implements RequestDtoInterface
 {
     #[Assert\NotBlank]
     #[Assert\Length(max: 60)]

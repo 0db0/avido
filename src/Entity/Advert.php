@@ -14,12 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Advert
 {
-    public const STATUS_DRAFT      = 0;
-    public const STATUS_MODERATION = 1;
-    public const STATUS_REJECTED   = 2;
-    public const STATUS_DONE       = 3;
-    public const STATUS_ACTIVE     = 4;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -34,13 +28,13 @@ class Advert
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
     private Category $category;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City")
-     * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="city_id", referencedColumnName="id", nullable=false)
      */
     private City $city;
 
@@ -52,7 +46,7 @@ class Advert
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private \DateTime $publishAt;
+    private \DateTime $publishedAt;
 
     /**
      * @ORM\Column(type="bigint", options={"unsigned"=true})
@@ -61,9 +55,9 @@ class Advert
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
      */
-    private User $seller;
+    private User $author;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
@@ -141,14 +135,14 @@ class Advert
         $this->description = $description;
     }
 
-    public function getPublishAt(): \DateTime
+    public function getPublishedAt(): \DateTime
     {
-        return $this->publishAt;
+        return $this->publisedhAt;
     }
 
-    public function setPublishAt(\DateTime $publishAt): void
+    public function setPublishedAt(\DateTime $publishedAt): void
     {
-        $this->publishAt = $publishAt;
+        $this->publishedAt = $publishedAt;
     }
 
     public function getCost(): int
@@ -161,14 +155,14 @@ class Advert
         $this->cost = $cost;
     }
 
-    public function getSeller(): User
+    public function getAuthor(): User
     {
-        return $this->seller;
+        return $this->author;
     }
 
-    public function setSeller(User $seller): void
+    public function setAuthor(User $author): void
     {
-        $this->seller = $seller;
+        $this->author = $author;
     }
 
     public function getCountViews(): int
@@ -220,7 +214,7 @@ class Advert
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(): void
+    public function refreshUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();
     }
@@ -231,9 +225,9 @@ class Advert
             'id'          => $this->id,
             'name'        => $this->name,
             'status'      => AdvertStatus::from($this->status)->name,
-            'seller_id'   => $this->seller->getId(),
+            'author_id'   => $this->author->getId(),
             'category'    => $this->category->getName(),
-            'city'        => $this->city?->getName(),
+            'city'        => $this->city->getName(),
             'description' => $this->description,
             'cost'        => $this->cost,
             'count_views' => $this->countViews,

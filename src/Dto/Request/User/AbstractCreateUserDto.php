@@ -2,11 +2,10 @@
 
 namespace App\Dto\Request\User;
 
-use App\Entity\User;
+use App\Dto\Request\RequestDtoInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-abstract class AbstractCreateUserDto
+abstract class AbstractCreateUserDto implements RequestDtoInterface
 {
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]

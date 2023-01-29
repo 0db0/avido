@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Utils;
+namespace App\Utils\RequestDtoConverter;
 
+use ReflectionException;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use TypeError;
 
 class RequestDtoValidator
 {
@@ -24,6 +26,18 @@ class RequestDtoValidator
         /** @var ConstraintViolationInterface $error */
         foreach ($errors as $error) {
             $message .= $error->getMessage() . ' ';
+        }
+
+        return $message;
+    }
+
+    public function prepareMessageFromException(ReflectionException|TypeError $e, array $attributes): string
+    {
+        $message = 'Missing required field';
+        foreach ($attributes as $attribute => $key) {
+            if (str_contains($e->getMessage(), '$'.$attribute)) {
+                $message .= ' '. $attribute;
+            }
         }
 
         return $message;

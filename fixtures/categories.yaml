@@ -1,0 +1,12 @@
+App\Entity\Category:
+  base_category (template):
+    name (unique): <word()>
+    url_code (unique): <slug(2)>
+    description: <text()>
+
+  parent_category{1..5} (extends base_category):
+    parent_id: 0
+
+  child_category{1..5} (extends base_category):
+    parent_id: <numberBetween(1,5)>
+

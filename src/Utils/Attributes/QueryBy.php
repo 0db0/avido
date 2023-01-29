@@ -7,9 +7,9 @@ namespace App\Utils\Attributes;
 use Attribute;
 
 #[Attribute]
-class Mapped
+class QueryBy
 {
-    public function __construct(public readonly string $mappedKey)
+    public function __construct(public readonly string $queryKey)
     {
     }
 }
