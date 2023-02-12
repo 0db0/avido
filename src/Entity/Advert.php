@@ -3,93 +3,72 @@
 namespace App\Entity;
 
 use App\Enum\AdvertStatus;
+use App\Repository\AdvertRepository;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="adverts")
- * @ORM\Entity(repositoryClass="App\Repository\AdvertRepository")
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'adverts')]
+#[ORM\Entity(repositoryClass: AdvertRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Advert
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(Category::class)]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false)]
     private Category $category;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\City")
-     * @ORM\JoinColumn(name="city_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(City::class)]
+    #[ORM\JoinColumn(name: 'city_id', referencedColumnName: 'id', nullable: false)]
     private City $city;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private CarbonInterface $publishedAt;
 
-    /**
-     * @ORM\Column(type="bigint", options={"unsigned"=true})
-     */
+    #[ORM\Column(type: Types::BIGINT, options: ['unsigned' => true])]
     private int $cost;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\ManyToOne(User::class)]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: false)]
     private User $author;
 
-    /**
-     * @ORM\Column(type="integer", options={"unsigned"=true})
-     */
+    #[ORM\Column(type: Types::INTEGER, options: ['unsigned' => true])]
     private int $countViews;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Photo", mappedBy="advert")
-     */
+    #[ORM\OneToMany(mappedBy: 'advert', targetEntity: Photo::class)]
     private Collection $photos;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true})
-     */
+
+    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
     private int $status;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private CarbonInterface $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private CarbonInterface $updatedAt;
+
+    #[ORM\OneToMany(mappedBy: 'advert', targetEntity: ModerationDecision::class)]
+    private Collection $moderationDecisions;
 
     public function __construct()
     {
         $this->countViews = 0;
         $this->photos = new ArrayCollection();
+        $this->moderationDecisions = new ArrayCollection();
     }
 
     public function getId(): int
@@ -205,17 +184,13 @@ class Advert
         return $this->createdAt;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setInitialTime(): void
     {
         $this->createdAt = $this->updatedAt = Carbon::now();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function refreshUpdatedAt(): void
     {
         $this->updatedAt = Carbon::now();
@@ -236,5 +211,20 @@ class Advert
             'created_at'  => $this->createdAt->toIso8601ZuluString(),
             'updated_at'  => $this->updatedAt->toIso8601ZuluString(),
         ];
+    }
+
+    public function getModerationDecisions(): Collection
+    {
+        return $this->moderationDecisions;
+    }
+
+    public function addModerationDecision(ModerationDecision $moderationDecision): self
+    {
+        if (!$this->moderationDecisions->contains($moderationDecision)) {
+            $this->moderationDecisions->add($moderationDecision);
+            $moderationDecision->setAdvert($this);
+        }
+
+        return $this;
     }
 }

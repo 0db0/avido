@@ -4,93 +4,66 @@ namespace App\Entity;
 
 use App\Enum\UserRole;
 use App\Enum\UserStatus;
+use App\Repository\UserRepository;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @ORM\Table(name="users")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ORM\HasLifecycleCallbacks
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
- */
+#[ORM\Table(name: 'users')]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $firstname;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $lastname;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255)]
     private string $patronymic;
 
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255, unique: true)]
     private string $email;
 
-    /**
-     * @ORM\Column(type="string", length=13, unique=true, nullable=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 13, unique: true, nullable: true)]
     private string $phoneNumber;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private string $whenConvenientReceiveCalls;
 
-    /**
-     * @ORM\Column(type="smallint", options={"unsigned"=true})
-     */
+    #[ORM\Column(type: Types::SMALLINT, options: ['unsigned' => true])]
     private int $status;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private string $password;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: Types::JSON)]
     private array $roles;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\EmailVerification", mappedBy="user")
-     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EmailVerification::class)]
     private Collection $verifications;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private CarbonInterface $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private CarbonInterface $updatedAt;
 
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: Types::BOOLEAN)]
     private bool $isVerified = false;
 
     public function __construct()
@@ -203,9 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 //        $this->status = UserStatus::Awaiting_email_activation->value;
 //    }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setInitialTime(): void
     {
         $this->createdAt = $this->updatedAt = Carbon::now();
@@ -216,9 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->updatedAt;
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function refreshUpdatedAt(): void
     {
         $this->updatedAt = Carbon::now();
