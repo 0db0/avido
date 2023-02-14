@@ -17,14 +17,26 @@ class Moderator
 
     public function decline(Advert $advert, AdvertModerationDeclineDto $decisionDto): void
     {
-        $advert->setStatus(AdvertStatus::Rejected);
-        /** @var ModerationDecision $decision */
-        $decision = $advert->getModerationDecisions()->first();
+        $decision = new ModerationDecision();
         $decision->setStatus(AdvertModerationStatus::Declined);
 
         if ($decisionDto->note) {
             $decision->setNote($decisionDto->note);
         }
+
+        $advert->addModerationDecision($decision);
+        $advert->setStatus(AdvertStatus::Rejected);
+
+        $this->em->flush();
+    }
+
+    public function approve(Advert $advert): void
+    {
+        $decision = new ModerationDecision();
+        $decision->setStatus(AdvertModerationStatus::Approved);
+
+        $advert->addModerationDecision($decision);
+        $advert->setStatus(AdvertStatus::Active);
 
         $this->em->flush();
     }

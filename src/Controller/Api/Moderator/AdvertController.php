@@ -30,20 +30,21 @@ final class AdvertController extends AbstractController
         ]);
     }
 
-    #[Route('/adverts/{id}/decline', name: 'push_to_moderation_advert', methods: ['POST'])]
+    #[Route('/adverts/{id}/approve', name: 'approve_advert', methods: ['POST'])]
     public function approve(Advert $advert): JsonResponse
     {
         $this->denyAccessUnlessGranted(AdvertPermissions::MODERATE, $advert);
 
+        $this->moderator->approve($advert);
 
         return $this->json([
-            'message' => 'Advert moved to moderation',
+            'message' => 'Advert approved',
             'data'    => $advert->toArray(),
         ]);
     }
 
     #[Route('/adverts/{id}/decline', name: 'decline_advert', methods: ['POST'])]
-    #[ParamConverter('decision', AdvertModerationDeclineDto::class)]
+    #[ParamConverter('decisionDto', AdvertModerationDeclineDto::class)]
     public function decline(Advert $advert, AdvertModerationDeclineDto $decisionDto): JsonResponse
     {
         $this->denyAccessUnlessGranted(AdvertPermissions::MODERATE, $advert);
@@ -51,7 +52,7 @@ final class AdvertController extends AbstractController
         $this->moderator->decline($advert, $decisionDto);
 
         return $this->json([
-            'message' => 'Advert moved to moderation',
+            'message' => 'Advert declined',
             'data'    => $advert->toArray(),
         ]);
     }
