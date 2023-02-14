@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\AdvertModerationStatus;
 use App\Repository\ModerationDecisionRepository;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -62,14 +63,14 @@ class ModerationDecision
         return $this;
     }
 
-    public function getStatus(): int
+    public function getStatus(): AdvertModerationStatus
     {
-        return $this->status;
+        return AdvertModerationStatus::from($this->status);
     }
 
-    public function setStatus(int $status): self
+    public function setStatus(AdvertModerationStatus $status): self
     {
-        $this->status = $status;
+        $this->status = $status->value;
 
         return $this;
     }
