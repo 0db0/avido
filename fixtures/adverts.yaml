@@ -20,11 +20,14 @@ App\Entity\Advert:
     author: '@active_user1'
   moderation_advert (extends base_advert):
     status: <{advert_moderation}>
+    author: '@active_user1'
   rejected_advert (extends base_advert):
     status: <{advert_rejected}>
     author: '@active_user1'
   active_advert (extends base_advert):
     status: <{advert_active}>
+    author: '@active_user1'
     publishedAt: <dateTime()>
   done_advert (extends base_advert):
     status: <{advert_done}>
+    author: '@active_user1'

@@ -2,54 +2,40 @@
 
 namespace App\Entity;
 
+use App\Repository\PhotoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Table(name="photos")
- * @ORM\Entity(repositoryClass="App\Repository\PhotoRepository")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Table('photos')]
+#[ORM\Entity(repositoryClass: PhotoRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Photo
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
     private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=64, unique=true)
-     */
+    #[ORM\Column(type: Types::STRING, length: 64, unique: true)]
     private string $url;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Advert", inversedBy="photos")
-     * @ORM\JoinColumn(name="advert_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Advert::class, inversedBy: 'photos')]
+    #[ORM\JoinColumn(name: 'advert_id', referencedColumnName: 'id')]
     private Advert $advert;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTime $createdAt;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private \DateTime $updatedAt;
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setInitialTime(): void
     {
         $this->createdAt = $this->updatedAt = new \DateTime();
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedAt(): void
     {
         $this->updatedAt = new \DateTime();

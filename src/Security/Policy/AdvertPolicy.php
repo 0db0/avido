@@ -75,4 +75,14 @@ final class AdvertPolicy
 
         return in_array($advert->getStatus(), [AdvertStatus::Draft, AdvertStatus::Rejected], true);
     }
+
+    public function canModerate(User $user, Advert $advert): bool
+    {
+        if ($advert->getStatus() !== AdvertStatus::Moderation) {
+            return false;
+        }
+
+        return $user->getStatus() === UserStatus::Active
+            && $this->security->isGranted([UserRole::Moderator->value, UserRole::Admin->value]);
+    }
 }

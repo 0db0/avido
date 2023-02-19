@@ -21,10 +21,11 @@ final class AdvertVoter extends Voter
     {
         return match($attribute) {
             AdvertPermissions::CREATE,
-            AdvertPermissions::LIST               => is_null($subject),
+            AdvertPermissions::LIST                => is_null($subject),
             AdvertPermissions::SHOW,
             AdvertPermissions::EDIT,
-            AdvertPermissions::PUSH_TO_MODERATION => $subject instanceof Advert,
+            AdvertPermissions::PUSH_TO_MODERATION,
+            AdvertPermissions::MODERATE            => $subject instanceof Advert,
 
             default => false,
         };
@@ -47,6 +48,7 @@ final class AdvertVoter extends Voter
             AdvertPermissions::SHOW               => $this->policy->canShow($user, $subject),
             AdvertPermissions::EDIT               => $this->policy->canEdit($user, $subject),
             AdvertPermissions::PUSH_TO_MODERATION => $this->policy->canPushToModeration($user, $subject),
+            AdvertPermissions::MODERATE           => $this->policy->canModerate($user, $subject),
 
             default => throw new Exception(),
         };

@@ -11,6 +11,8 @@ final class AdvertPermissions
     public const DELETE             = 'delete_advert';
     public const PUSH_TO_MODERATION = 'push_to_moderation_advert';
 
+    public const MODERATE = 'moderate';
+
     public const ADVERT_PERMISSIONS = [
         self::CREATE,
         self::SHOW,
